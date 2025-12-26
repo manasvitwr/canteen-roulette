@@ -1,0 +1,6 @@
+
+{
+  "name": "Canteen Roulette",
+  "description": "A food decision engine for Somaiya Vidyavihar University students featuring a slot-machine randomizer, canteen explorer, and simulated order tracking.",
+  "requestFramePermissions": []
+}

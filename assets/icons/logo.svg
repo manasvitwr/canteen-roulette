@@ -1,0 +1,64 @@
+<svg width="371" height="352" viewBox="0 0 371 352" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="371" height="352" fill="#F5FF00"/>
+
+  <!-- Everything shifted slightly down -->
+  <g transform="translate(0,10)">
+    <!-- LEFT CLUSTER -->
+    <!-- Column 1 -->
+    <rect x="54" y="72" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="58" y="76" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <rect x="54" y="134" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="58" y="138" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <rect x="54" y="196" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="58" y="200" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <!-- Column 2 -->
+    <rect x="114" y="72" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="118" y="76" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <rect x="114" y="196" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="118" y="200" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <!-- RIGHT CLUSTER -->
+    <!-- Row 1 -->
+    <rect x="200" y="72" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="204" y="76" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <rect x="260" y="72" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="264" y="76" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <!-- Row 2 -->
+    <rect x="200" y="134" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="204" y="138" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <rect x="260" y="134" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="264" y="138" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <!-- Row 3 -->
+    <rect x="200" y="196" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="204" y="200" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <!-- 6th R box -->
+    <rect x="292" y="196" width="54" height="54" rx="10" fill="#FF9A73"/>
+    <rect x="296" y="200" width="46" height="46" rx="8" fill="#FF4A1F"/>
+
+    <!-- CONNECTOR (ends at center of 6th box) -->
+    <path
+      d="
+        M227 99
+        H295
+        V161
+        H227
+        L319 223
+      "
+      fill="none"
+      stroke="#FFFFFF"
+      stroke-width="5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>
