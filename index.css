@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode - Clean white interface */
+    --background: 0 0% 100%;
+    /* Pure white #ffffff */
+    --foreground: 0 0% 9%;
+    /* Almost black for text #171717 */
+
+    --card: 0 0% 96%;
+    /* Very light grey for cards #f5f5f5 */
+    --card-foreground: 0 0% 9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 9%;
+
+    --primary: 24.6 95% 53.1%;
+    /* Orange accent */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
+    /* Medium grey for secondary text #666666 */
+
+    --accent: 24.6 95% 53.1%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 83%;
+    /* Subtle light grey border #d4d4d4 */
+    --input: 0 0% 90%;
+    --ring: 24.6 95% 53.1%;
+
+    --radius: 1rem;
+
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+    /* Icon color control for light mode */
+    --icon-invert: 0;
+    --icon-opacity: 0.7;
+  }
+
+  .dark {
+    /* Dark mode - Warm charcoal grey interface */
+    --background: 0 0% 12%;
+    /* Warm dark grey #1f1f1f, NOT pure black */
+    --foreground: 0 0% 98%;
+    /* White text #fafafa */
+
+    --card: 0 0% 15%;
+    /* Slightly lighter grey for cards #262626 */
+    --card-foreground: 0 0% 98%;
+
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 24.6 95% 53.1%;
+    /* Orange accent */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 18%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 0 0% 18%;
+    /* Muted background #2e2e2e */
+    --muted-foreground: 0 0% 60%;
+    /* Medium grey for secondary text #999999 */
+
+    --accent: 24.6 95% 53.1%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 0 0% 20%;
+    /* Subtle dark grey border #333333, NOT white */
+    --input: 0 0% 20%;
+    --ring: 24.6 95% 53.1%;
+
+    /* Icon color control for dark mode */
+    --icon-invert: 1;
+    --icon-opacity: 0.8;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@keyframes slide-in {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(350px);
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 4s linear forwards;
+}
