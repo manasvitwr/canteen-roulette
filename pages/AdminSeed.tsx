@@ -264,7 +264,6 @@ const RAW_MENU_DATA = `
 - Cheese Bhel - ₹45
 - Samosa Plate - ₹30
 - Ragda Patties - ₹40
-<<<<<<< HEAD
 
 **Hot Items**
 - Tea - ₹15
@@ -514,8 +513,212 @@ const RAW_MENU_DATA = `
 - Masala Rice with Raita - ₹86
 - Masala Rice with Sada Bhaji - ₹86
 - Masala Rice with Paneer Bhaji - ₹91
-=======
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
+
+## Management Canteen
+**Hot**
+- Tea - ₹15
+- Coffee - ₹19
+- Hot Milk - ₹26
+- Tea Half - ₹10
+- Tea Staff - ₹8
+
+**Fast Items**
+- Potato Chips with Lassi - ₹50
+- Potato Toast with Lassi - ₹50
+- Sabudana Wada - ₹50
+- Sabudana Khichadi with Lassi - ₹50
+- Alu Khichadi with Lassi - ₹50
+- Alu Jeera - ₹50
+
+**Snacks**
+- Samosa Pav - ₹20
+- Vada Pav - ₹20
+- Samosa Plate - ₹38
+- Pav - ₹5
+- Butter Pav - ₹10
+- Batata Wada - ₹33
+- Samosa Usal (Plate) - ₹54
+- Vada Usal (Plate) - ₹48
+- Vada Usal (Single) - ₹27
+- Samosa Usal (Single) - ₹27
+- Vada Samosa Usal - ₹54
+- Dahi Samosa (Single) - ₹47
+- Usal Pav - ₹34
+- Misal Pav with 2 Pav - ₹50
+- Bread Pakoda - ₹39
+- Idli Sambar - ₹39
+- Medu Wada Sambar - ₹50
+- Idli Wada - ₹50
+- Dahi Idli - ₹53
+- Butter Idli - ₹53
+- Idli Fry - ₹50
+- Dahi Misal Pav - ₹65
+- Upma / Poha - ₹34
+
+**Dosa**
+- Sada Dosa - ₹42
+- Butter Sada Dosa - ₹60
+- Cheese Sada Dosa - ₹76
+- Masala Dosa - ₹60
+- Cheese Masala Dosa - ₹80
+- Mysore Sada Dosa - ₹55
+- Mysore Masala Dosa - ₹76
+- Cheese Mysore Sada Dosa - ₹80
+- Cheese Mysore Masala Dosa - ₹97
+- Chinese Sada Dosa - ₹50
+- Chinese Dosa (Noodles) - ₹81
+- Cheese Chinese Dosa - ₹105
+
+**Uttapam**
+- Sada Uttapam - ₹50
+- Butter Sada Uttapam - ₹65
+- Cheese Sada Uttapam - ₹86
+- Onion Uttapam - ₹55
+- Cheese Onion Uttapam - ₹86
+- Masala Uttapam - ₹55
+- Cheese Masala Uttapam - ₹86
+- Tomato Uttapam - ₹55
+- Cheese Tomato Uttapam - ₹86
+- Four Taste Uttapam - ₹70
+- Tomato Omlate - ₹60
+
+**Sandwiches**
+- Bread Butter - ₹30
+- Toast Bread Butter - ₹40
+- Veg. Sandwich - ₹36
+- Veg. Cheese Sandwich - ₹86
+- Veg. Cheese Toast Sandwich - ₹97
+- Only Cheese Sandwich - ₹76
+- Tomato Sandwich - ₹37
+- Veg. Toast Sandwich - ₹60
+- Only Cheese Toast Sandwich - ₹90
+- Chinese Toast Sandwich - ₹65
+- Cheese Club Sandwich - ₹105
+- Cheese Chinese Toast Sandwich - ₹102
+- Club Sandwich - ₹76
+
+**Grilled**
+- Veg Grilled Sandwich - ₹80
+- Veg Cheese Grilled Sandwich - ₹102
+- Chinese Grill Sandwich - ₹80
+- Veg Chinese Cheese Grill Sandwich - ₹102
+
+**Chaat**
+- Bhel Puri - ₹38
+- Sev Puri - ₹38
+- Dahi Potato Puri - ₹60
+- Bombay Puri - ₹66
+- Sukha Bhel - ₹38
+- Cheese Bhel - ₹80
+
+**Extras**
+- Extra Cheese - ₹37
+- Extra Butter - ₹32
+- Extra Pav - ₹30
+- Extra Vati Sambar - ₹22
+- Extra Vati Chutni - ₹15
+- Extra Vati Sauce - ₹10
+
+**Noodles**
+- Veg. Hakka Noodles - ₹86
+- Schezwan Noodles - ₹91
+- Singapore Noodles - ₹91
+- Manchurian Noodles - ₹91
+- Triple Schezwan Noodles - ₹97
+
+**Rice**
+- Veg Fried Rice - ₹86
+- Schezwan Rice - ₹91
+- Singapore Rice - ₹91
+- Manchurian Rice - ₹91
+- Triple Schezwan Rice - ₹97
+
+**Special Rice**
+- Tomato Rice with Dahl - ₹80
+- Lemon Rice - ₹66
+- Paneer Chilli Rice - ₹118
+- Veg Biryani Rice - ₹97
+- Paneer Biryani Rice - ₹118
+
+**Gravy**
+- Veg Manchurian - ₹66
+- Veg Chilly - ₹66
+- Paneer Chilly - ₹107
+- Idli Chilly - ₹66
+- Schwan Manchurian - ₹66
+
+**Choupsey**
+- American Choupsey - ₹76
+- Schezwan Choupsey - ₹76
+- Chinese Choupsey - ₹76
+
+**Soup**
+- Manchow Soup - ₹68
+- Tomato Soup - ₹68
+- Clear Soup - ₹68
+
+**Lunch**
+- Chappati Bhaji - ₹60
+- Chappati Paneer Bhaji - ₹76
+- Puri Sada Bhaji - ₹60
+- Puri Paneer Bhaji - ₹76
+- Potato Bhaji - ₹45
+- Paneer Bhaji (Full) - ₹76
+- Paneer Bhaji (Half) - ₹47
+- Sada Bhaji (Full) - ₹55
+- Sada Bhaji (Half) - ₹37
+- Veg Raita - ₹34
+- Plain Dahi (Curd) - ₹28
+- Single Chappati - ₹7
+- Dal Fry - ₹38
+- Lunch - ₹76
+- Lunch with Pulav - ₹86
+- Lunch with Jeera Rice - ₹86
+- Dal Rice - ₹44
+- Dal Fry Rice - ₹70
+- Dal Rice with Bhaji - ₹65
+- Dahi Rice (Plain) - ₹65
+- Dahi Masala Rice - ₹76
+- Jeera Rice with Sambar - ₹65
+- Jeera Rice with Sada Bhaji - ₹76
+- Jeera Rice with Paneer Bhaji - ₹86
+- Jeera Rice with Dal Fry - ₹81
+- Jeera Rice with Raita - ₹86
+- Pulav Rice with Sambar - ₹76
+- Pulav Rice with Sada Bhaji - ₹81
+- Pulav Rice with Paneer Bhaji - ₹86
+- Pulav Rice with Dal Fry - ₹76
+- Masala Rice with Sambar - ₹76
+- Masala Rice with Raita - ₹86
+- Masala Rice with Sada Bhaji - ₹86
+- Masala Rice with Paneer Bhaji - ₹91
+
+**Franky**
+- Schezwan Noodles Franky - ₹50
+- Double Cheese Franky - ₹105
+- Cheese Schezwan Franky - ₹94
+- Cheese Schezwan Paneer Franky - ₹100
+- Cheese Schezwan Mayonise Franky - ₹100
+- Cheese Schezwan Noodle Franky - ₹105
+- Cheese Mayonise Paneer Franky - ₹105
+- Cheese Schezwan Manchurian Franky - ₹79
+- Cheese Schezwan Chilly Franky - ₹94
+- Manchurian Schezwan Franky - ₹89
+- Manchurian Chilly Cheese Franky - ₹58
+- Manchurian Paneer Franky - ₹105
+- Manchurian Mayonise Paneer Franky - ₹84
+- Manchurian Cheese Mayonise Paneer Franky - ₹52
+- Manchurian Noodles Franky - ₹100
+- Paneer Cheese Chilly Franky - ₹126
+- Paneer Mayonise Cheese Franky - ₹58
+- Paneer Samosa Franky - ₹105
+- Paneer Schezwan Franky - ₹115
+- Paneer Noodles Franky - ₹84
+- Paneer Mayonise Franky - ₹68
+- Mayonise Schezwan Franky - ₹68
+- Mayonise Samosa Franky - ₹58
+- Mayonise Samosa Cheese Chilly Franky - ₹73
+- Mayonise Noodles Franky - ₹115
 `;
 
 const AdminSeed: React.FC = () => {
@@ -536,12 +739,9 @@ const AdminSeed: React.FC = () => {
     const canteenMap: Record<string, string> = {
       'Cafeteria Canteen (Olive Greens by Jimmy Boy)': 'eklavya',
       'Maggi house': 'maggi',
-<<<<<<< HEAD
       'Engineering Canteen (Siddhi Services)': 'engg',
-      'Aurobindo Canteen': 'aurobindo'
-=======
-      'Engineering Canteen (Siddhi Services)': 'engg'
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
+      'Aurobindo Canteen': 'aurobindo',
+      'Management Canteen': 'management'
     };
 
     const getType = (category: string): FoodType => {
@@ -579,11 +779,7 @@ const AdminSeed: React.FC = () => {
         if (parts.length === 2) {
           const name = parts[0].trim();
           const price = parseInt(parts[1].trim());
-<<<<<<< HEAD
           const id = `${currentCanteenId}-${currentCategory.toLowerCase().replace(/\s+/g, '-')}-${name.toLowerCase().replace(/[\s\/]+/g, '-')}`.slice(0, 100);
-=======
-          const id = `${currentCanteenId}-${currentCategory.toLowerCase().replace(/\s+/g, '-')}-${name.toLowerCase().replace(/\s+/g, '-')}`.slice(0, 100);
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
 
           menuItems.push({
             id,
@@ -611,7 +807,6 @@ const AdminSeed: React.FC = () => {
     setStatus('Parsing menu data...');
     try {
       const canteens = [
-<<<<<<< HEAD
         { id: 'engg', name: 'Engineering Canteen', slug: 'engineering-canteen', locationTag: 'Near Bhaskaracharya Building', isActive: true, type: 'canteen' as const },
         { id: 'maggi', name: 'Maggi House', slug: 'maggi-house', locationTag: 'Near AryaBhatta Building', isActive: true, type: 'canteen' as const },
         { id: 'eklavya', name: 'Eklavya Café', slug: 'eklavya-cafe', locationTag: 'Sports Canteen (opp to Somaiya Sports Academy Building)', isActive: true, type: 'canteen' as const },
@@ -620,11 +815,6 @@ const AdminSeed: React.FC = () => {
         { id: 'poly-hostel', name: 'Polytechnic Hostel', slug: 'polytechnic-hostel', locationTag: 'Near K.J Somaiya Polytechnic Building', isActive: true, type: 'mess' as const },
         { id: 'maitreyi-hostel', name: 'Maitreyi Hostel', slug: 'maitreyi-hostel', locationTag: 'Near KJSIM', isActive: true, type: 'mess' as const },
         { id: 'sandipani-hostel', name: 'Sandipani Hostel', slug: 'sandipani-hostel', locationTag: 'Near KJSIM', isActive: true, type: 'mess' as const }
-=======
-        { id: 'engg', name: 'Engineering Canteen', slug: 'engineering-canteen', locationTag: 'KJSCE Building', isActive: true },
-        { id: 'maggi', name: 'Maggi House', slug: 'maggi-house', locationTag: 'Near Poly', isActive: true },
-        { id: 'eklavya', name: 'Eklavya Café', slug: 'eklavya-cafe', locationTag: 'Eklavya Area', isActive: true }
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
       ];
 
       // Parse all items from RAW_MENU_DATA
