@@ -5,7 +5,10 @@ export interface Canteen {
   slug: string;
   locationTag: string;
   isActive: boolean;
+<<<<<<< HEAD
   type?: 'canteen' | 'mess'; // Optional categorization
+=======
+>>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
   image?: string;
 }
 

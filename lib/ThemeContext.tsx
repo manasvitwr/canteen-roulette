@@ -60,7 +60,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     return (
         <ThemeContext.Provider value={{ theme, setTheme }}>
+<<<<<<< HEAD
             {children}
+=======
+            {isMounted ? children : <div style={{ visibility: 'hidden' }}>{children}</div>}
+>>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
         </ThemeContext.Provider>
     );
 };

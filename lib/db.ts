@@ -38,6 +38,7 @@ export const setLocalUser = (user: UserDoc) => {
 };
 
 export const getLocalOrders = (): Order[] => {
+<<<<<<< HEAD
   try {
     const data = localStorage.getItem(STORAGE_KEYS.ORDERS);
     return data ? JSON.parse(data) : [];
@@ -45,6 +46,10 @@ export const getLocalOrders = (): Order[] => {
     console.error('[getLocalOrders] Failed to parse orders:', error);
     return [];
   }
+=======
+  const data = localStorage.getItem(STORAGE_KEYS.ORDERS);
+  return data ? JSON.parse(data) : [];
+>>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
 };
 
 export const saveOrder = (order: Order) => {

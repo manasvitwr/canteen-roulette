@@ -264,6 +264,7 @@ const RAW_MENU_DATA = `
 - Cheese Bhel - ₹45
 - Samosa Plate - ₹30
 - Ragda Patties - ₹40
+<<<<<<< HEAD
 
 **Hot Items**
 - Tea - ₹15
@@ -513,6 +514,8 @@ const RAW_MENU_DATA = `
 - Masala Rice with Raita - ₹86
 - Masala Rice with Sada Bhaji - ₹86
 - Masala Rice with Paneer Bhaji - ₹91
+=======
+>>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
 `;
 
 const AdminSeed: React.FC = () => {
@@ -533,8 +536,12 @@ const AdminSeed: React.FC = () => {
     const canteenMap: Record<string, string> = {
       'Cafeteria Canteen (Olive Greens by Jimmy Boy)': 'eklavya',
       'Maggi house': 'maggi',
+<<<<<<< HEAD
       'Engineering Canteen (Siddhi Services)': 'engg',
       'Aurobindo Canteen': 'aurobindo'
+=======
+      'Engineering Canteen (Siddhi Services)': 'engg'
+>>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
     };
 
     const getType = (category: string): FoodType => {
@@ -572,7 +579,11 @@ const AdminSeed: React.FC = () => {
         if (parts.length === 2) {
           const name = parts[0].trim();
           const price = parseInt(parts[1].trim());
+<<<<<<< HEAD
           const id = `${currentCanteenId}-${currentCategory.toLowerCase().replace(/\s+/g, '-')}-${name.toLowerCase().replace(/[\s\/]+/g, '-')}`.slice(0, 100);
+=======
+          const id = `${currentCanteenId}-${currentCategory.toLowerCase().replace(/\s+/g, '-')}-${name.toLowerCase().replace(/\s+/g, '-')}`.slice(0, 100);
+>>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
 
           menuItems.push({
             id,
@@ -600,6 +611,7 @@ const AdminSeed: React.FC = () => {
     setStatus('Parsing menu data...');
     try {
       const canteens = [
+<<<<<<< HEAD
         { id: 'engg', name: 'Engineering Canteen', slug: 'engineering-canteen', locationTag: 'Near Bhaskaracharya Building', isActive: true, type: 'canteen' as const },
         { id: 'maggi', name: 'Maggi House', slug: 'maggi-house', locationTag: 'Near AryaBhatta Building', isActive: true, type: 'canteen' as const },
         { id: 'eklavya', name: 'Eklavya Café', slug: 'eklavya-cafe', locationTag: 'Sports Canteen (opp to Somaiya Sports Academy Building)', isActive: true, type: 'canteen' as const },
@@ -608,6 +620,11 @@ const AdminSeed: React.FC = () => {
         { id: 'poly-hostel', name: 'Polytechnic Hostel', slug: 'polytechnic-hostel', locationTag: 'Near K.J Somaiya Polytechnic Building', isActive: true, type: 'mess' as const },
         { id: 'maitreyi-hostel', name: 'Maitreyi Hostel', slug: 'maitreyi-hostel', locationTag: 'Near KJSIM', isActive: true, type: 'mess' as const },
         { id: 'sandipani-hostel', name: 'Sandipani Hostel', slug: 'sandipani-hostel', locationTag: 'Near KJSIM', isActive: true, type: 'mess' as const }
+=======
+        { id: 'engg', name: 'Engineering Canteen', slug: 'engineering-canteen', locationTag: 'KJSCE Building', isActive: true },
+        { id: 'maggi', name: 'Maggi House', slug: 'maggi-house', locationTag: 'Near Poly', isActive: true },
+        { id: 'eklavya', name: 'Eklavya Café', slug: 'eklavya-cafe', locationTag: 'Eklavya Area', isActive: true }
+>>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
       ];
 
       // Parse all items from RAW_MENU_DATA
