@@ -1,28 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../lib/firebase.ts';
 import { Order } from '../types';
-import { MenuItem as FirestoreMenuItem } from '../types/firestore.ts';
+import { MenuItem as FirestoreMenuItem, Canteen } from '../types/firestore.ts';
 import { getVegPref, getLocalOrders } from '../lib/db.ts';
-import { getFilteredMenuItems, getCanteens } from '../lib/menu.ts';
+import { getFilteredMenuItems } from '../lib/menu.ts';
 import RouletteModal from '../components/roulette/RouletteModal.tsx';
 import { RouletteBanner } from '../components/roulette/RouletteBanner.tsx';
 import { useAuth } from '../App.tsx';
 import { VegIcon } from '../components/common/VegIcon.tsx';
+import { ItemDetailModal } from '../components/common/ItemDetailModal.tsx';
+import { useBag } from '../lib/BagContext.tsx';
+import { Toast } from '../components/common/Toast.tsx';
 
 const Home: React.FC = () => {
   const { user, isGuest } = useAuth();
+  const navigate = useNavigate();
+  const { addToBag } = useBag();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
   const [selectedItem, setSelectedItem] = useState<FirestoreMenuItem | null>(null);
   const [pastOrders, setPastOrders] = useState<Order[]>([]);
   const [popularItems, setPopularItems] = useState<FirestoreMenuItem[]>([]);
+  const [selectedPopularItem, setSelectedPopularItem] = useState<FirestoreMenuItem | null>(null);
+  const [canteens, setCanteens] = useState<Canteen[]>([]);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     setPastOrders(getLocalOrders().slice(0, 3));
     async function loadPopular() {
       try {
-        const items = await getFilteredMenuItems({ isVeg: getVegPref() === 'veg' });
-        setPopularItems(items.slice(0, 4));
+        // Fetch ALL menu items from Firestore
+        const menuRef = collection(db, 'menu_items');
+        const menuSnapshot = await getDocs(menuRef);
+        const allItems = menuSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        } as FirestoreMenuItem));
+
+        // Fetch all canteens to get names
+        const canteensRef = collection(db, 'canteens');
+        const canteensSnapshot = await getDocs(canteensRef);
+        const canteensData = canteensSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        } as Canteen));
+        setCanteens(canteensData);
+
+        // Create a map for quick canteen lookup
+        const canteenMap = new Map(canteensData.map(c => [c.id, c.name]));
+
+        // Randomly select 4 distinct items
+        const shuffled = [...allItems].sort(() => Math.random() - 0.5);
+        const selected = shuffled.slice(0, 4).map(item => ({
+          ...item,
+          canteenName: canteenMap.get(item.canteenId) || 'Campus Canteen'
+        }));
+
+        setPopularItems(selected);
       } catch (err) {
         console.error("Failed to load popular items:", err);
       }
@@ -66,7 +102,6 @@ const Home: React.FC = () => {
 
       setTimeout(async () => {
         if (mode === 'on-campus') {
-          const canteens = await getCanteens();
           const canteen = canteens.find(c => c.id === winner.canteenId);
           setSelectedItem({ ...winner, canteenName: canteen?.name || 'Campus Canteen' });
         } else {
@@ -79,6 +114,34 @@ const Home: React.FC = () => {
       setIsSpinning(false);
     }
   };
+
+  const handlePopularItemClick = (item: FirestoreMenuItem) => {
+    setSelectedPopularItem(item);
+  };
+
+  const handleOrderNow = () => {
+    setSelectedPopularItem(null);
+    navigate('/explore');
+  };
+
+  const handleAddToBag = () => {
+    if (selectedPopularItem) {
+      addToBag(selectedPopularItem as any);
+      setToastMessage(`Added ${selectedPopularItem.name} to bag`);
+      setSelectedPopularItem(null);
+    }
+  };
+
+  // ESC key to close modal
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedPopularItem) {
+        setSelectedPopularItem(null);
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [selectedPopularItem]);
 
   return (
     <div className="mx-auto max-w-5xl px-6 pt-6 pb-24 space-y-10 animate-apple-in">
@@ -110,12 +173,18 @@ const Home: React.FC = () => {
         <h2 className="text-xs font-bold tracking-[0.15em] text-muted-foreground uppercase ml-2">Popular choices</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {popularItems.map((item) => (
-            <div key={item.id} className="bg-card rounded-2xl p-5 border border-border shadow-sm flex items-center justify-between hover:border-primary/50 transition-all group">
+            <div
+              key={item.id}
+              onClick={() => handlePopularItemClick(item)}
+              className="bg-card rounded-2xl p-5 border border-border shadow-sm flex items-center justify-between hover:border-primary/50 transition-all group cursor-pointer active:scale-[0.98]"
+            >
               <div className="flex items-center gap-5">
                 <VegIcon isVeg={item.isVeg} size="w-3.5 h-3.5" />
                 <div>
                   <h4 className="font-semibold text-foreground text-base tracking-tight">{item.name}</h4>
-                  <p className="text-sm font-medium"><span style={{ color: '#F5FF00' }}>₹{item.price}</span> • {item.type}</p>
+                  <p className="text-sm font-medium">
+                    <span style={{ color: '#F5FF00' }}>₹{item.price}</span> • {item.type} • <span className="text-muted-foreground">{item.canteenName}</span>
+                  </p>
                 </div>
               </div>
               <div className="text-3xl transition-transform group-hover:scale-110">{item.emoji || '🍱'}</div>
@@ -167,6 +236,19 @@ const Home: React.FC = () => {
           )}
         </div>
       </section>
+
+      {/* Item Detail Modal */}
+      <ItemDetailModal
+        item={selectedPopularItem}
+        canteenName={selectedPopularItem?.canteenName}
+        isOpen={!!selectedPopularItem}
+        onClose={() => setSelectedPopularItem(null)}
+        onOrder={handleOrderNow}
+        onAddToBag={handleAddToBag}
+      />
+
+      {/* Toast Notification */}
+      {toastMessage && <Toast message={toastMessage} onClose={() => setToastMessage(null)} />}
     </div>
   );
 };
