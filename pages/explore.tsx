@@ -7,10 +7,7 @@ import { getVegPref } from '../lib/db.ts';
 import { VegIcon } from '../components/common/VegIcon.tsx';
 import { useBag } from '../lib/BagContext.tsx';
 import { Toast } from '../components/common/Toast.tsx';
-<<<<<<< HEAD
 import { CanteenIcon, HostelIcon, MaggiIcon, CafeIcon } from '../components/common/Icons.tsx';
-=======
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
 
 const Explore: React.FC = () => {
   const [search, setSearch] = useState('');
@@ -28,11 +25,8 @@ const Explore: React.FC = () => {
         setLoading(true);
         setError(null);
 
-<<<<<<< HEAD
         console.log('[Explore] Starting to load data from Firestore...');
 
-=======
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
         // Fetch all canteens
         const canteensRef = collection(db, 'canteens');
         const canteensQuery = query(canteensRef, where('isActive', '==', true));
@@ -55,13 +49,8 @@ const Explore: React.FC = () => {
         setCanteens(canteensData);
         setAllMenuItems(menuData);
       } catch (err) {
-<<<<<<< HEAD
         console.error("[Explore] Failed to load data from Firestore:", err);
         setError("Failed to load menu data. Please check your connection and refresh.");
-=======
-        console.error("Failed to load data from Firestore:", err);
-        setError("Failed to load menu data. Please refresh the page.");
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
       } finally {
         setLoading(false);
       }
@@ -99,7 +88,6 @@ const Explore: React.FC = () => {
     return allMenuItems.filter(item => item.canteenId === canteenId);
   };
 
-<<<<<<< HEAD
   // Get icon for canteen based on type and ID
   const getCanteenIcon = (canteen: Canteen) => {
     if (canteen.type === 'mess') {
@@ -114,8 +102,6 @@ const Explore: React.FC = () => {
     return <CanteenIcon />;
   };
 
-=======
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
   if (loading) return (
     <div className="flex justify-center py-20 bg-background">
       <div className="animate-spin h-8 w-8 border-b-2 border-primary rounded-full"></div>
@@ -151,22 +137,14 @@ const Explore: React.FC = () => {
           <h2 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase px-2">
             Matching items ({filteredSearchItems.length})
           </h2>
-<<<<<<< HEAD
           <div className="flex flex-nowrap overflow-x-auto gap-3 pb-2 snap-x snap-mandatory scrollbar-none">
             {filteredSearchItems.map(item => <MenuCard key={item.id} item={item} onShowToast={setToastMessage} />)}
             {filteredSearchItems.length === 0 && (
               <p className="text-center py-10 text-muted-foreground font-medium w-full">No results found.</p>
-=======
-          <div className="space-y-3">
-            {filteredSearchItems.map(item => <MenuCard key={item.id} item={item} onShowToast={setToastMessage} />)}
-            {filteredSearchItems.length === 0 && (
-              <p className="text-center py-10 text-muted-foreground font-medium">No results found.</p>
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
             )}
           </div>
         </div>
       ) : (
-<<<<<<< HEAD
         <div className="space-y-6">
           {canteens.length === 0 ? (
             <p className="text-center py-10 text-neutral-500 dark:text-neutral-400 font-semibold text-sm">No canteens listed yet.</p>
@@ -240,11 +218,31 @@ const Explore: React.FC = () => {
                     const filteredCanteenItems = canteenItems.filter(item => vegPref === 'veg' ? item.isVeg : true);
                     const itemCount = filteredCanteenItems.length;
 
+                    // Locked state for Maitreyi and Sandipani hostels
+                    const isLocked = canteen.id === 'maitreyi-hostel' || canteen.id === 'sandipani-hostel';
+
+                    // PDF menu for Polytechnic hostel
+                    const isPdfMenu = canteen.id === 'poly-hostel';
+
+                    const handlePdfOpen = () => {
+                      window.open('/assets/menu/Polytechnic-mess-menu_2025-2026.pdf', '_blank');
+                    };
+
                     return (
-                      <div key={canteen.id} className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+                      <div key={canteen.id} className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden relative">
+                        {/* Locked overlay for Maitreyi & Sandipani */}
+                        {isLocked && (
+                          <div className="absolute inset-0 z-10 backdrop-blur-sm bg-black/30 flex flex-col items-center justify-center gap-2 rounded-2xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-10 h-10 text-white">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+                            </svg>
+                            <p className="text-white font-semibold text-sm">Menu coming soon</p>
+                          </div>
+                        )}
+
                         <div
-                          className="p-5 flex items-center justify-between cursor-pointer active:bg-secondary transition-colors"
-                          onClick={() => handleCanteenClick(canteen.id)}
+                          className={`p-5 flex items-center justify-between ${!isLocked ? 'cursor-pointer active:bg-secondary' : ''} transition-colors`}
+                          onClick={() => !isLocked && handleCanteenClick(canteen.id)}
                         >
                           <div className="flex items-center gap-3">
                             <div className="w-6 h-6 text-muted-foreground">
@@ -253,34 +251,57 @@ const Explore: React.FC = () => {
                             <div>
                               <h3 className="font-semibold text-foreground text-lg tracking-normal">{canteen.name}</h3>
                               <p className="text-xs text-muted-foreground font-medium">
-                                {canteen.locationTag} • {itemCount} items
+                                {isPdfMenu ? '₹70 per plate - Unlimited serving' : `${canteen.locationTag} • ${itemCount} items`}
                               </p>
                             </div>
                           </div>
-                          <div className={`transition-transform duration-300 ${expandedCanteen === canteen.id ? 'rotate-180' : ''}`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 text-muted-foreground">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                            </svg>
-                          </div>
+                          {!isLocked && (
+                            <div className={`transition-transform duration-300 ${expandedCanteen === canteen.id ? 'rotate-180' : ''}`}>
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 text-muted-foreground">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                              </svg>
+                            </div>
+                          )}
                         </div>
-                        {expandedCanteen === canteen.id && (
-                          <div className="bg-muted/50 p-5 border-t border-border space-y-8 animate-in slide-in-from-top-4">
-                            {Object.entries(groupByCategory(filteredCanteenItems)).map(([category, items]) => (
-                              <div key={category} className="space-y-3">
-                                <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-1">
-                                  {category} ({items.length})
-                                </h4>
-                                <div className="flex flex-nowrap overflow-x-auto gap-3 pb-2 snap-x snap-mandatory scrollbar-none">
-                                  {items.map(item => (
-                                    <MenuCard key={item.id} item={item} onShowToast={setToastMessage} />
-                                  ))}
-                                </div>
+
+                        {/* Expanded content for non-locked mess cards */}
+                        {!isLocked && expandedCanteen === canteen.id && (
+                          <div className="bg-muted/50 p-5 border-t border-border space-y-4 animate-in slide-in-from-top-4">
+                            {isPdfMenu ? (
+                              // PDF menu button for Polytechnic
+                              <div className="flex flex-col items-center gap-3 py-4">
+                                <p className="text-sm text-muted-foreground text-center">Detailed mess menu available as PDF</p>
+                                <button
+                                  onClick={handlePdfOpen}
+                                  className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all active:scale-95 font-semibold"
+                                >
+                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                  </svg>
+                                  Open full PDF menu
+                                </button>
                               </div>
-                            ))}
-                            {filteredCanteenItems.length === 0 && (
-                              <p className="text-center py-4 text-muted-foreground text-sm">
-                                No items available{vegPref === 'veg' ? ' (veg filter applied)' : ''}.
-                              </p>
+                            ) : (
+                              // Regular menu items for other mess
+                              <>
+                                {Object.entries(groupByCategory(filteredCanteenItems)).map(([category, items]) => (
+                                  <div key={category} className="space-y-3">
+                                    <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-1">
+                                      {category} ({items.length})
+                                    </h4>
+                                    <div className="flex flex-nowrap overflow-x-auto gap-3 pb-2 snap-x snap-mandatory scrollbar-none">
+                                      {items.map(item => (
+                                        <MenuCard key={item.id} item={item} onShowToast={setToastMessage} />
+                                      ))}
+                                    </div>
+                                  </div>
+                                ))}
+                                {filteredCanteenItems.length === 0 && (
+                                  <p className="text-center py-4 text-muted-foreground text-sm">
+                                    No items available{vegPref === 'veg' ? ' (veg filter applied)' : ''}.
+                                  </p>
+                                )}
+                              </>
                             )}
                           </div>
                         )}
@@ -291,59 +312,6 @@ const Explore: React.FC = () => {
               )}
             </>
           )}
-=======
-        <div className="space-y-4">
-          {canteens.length === 0 && !loading && (
-            <p className="text-center py-10 text-neutral-500 dark:text-neutral-400 font-semibold text-sm">No canteens listed yet.</p>
-          )}
-          {canteens.map(canteen => {
-            const canteenItems = getCanteenItems(canteen.id);
-            const filteredCanteenItems = canteenItems.filter(item => vegPref === 'veg' ? item.isVeg : true);
-            const itemCount = filteredCanteenItems.length;
-
-            return (
-              <div key={canteen.id} className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
-                <div
-                  className="p-5 flex items-center justify-between cursor-pointer active:bg-secondary transition-colors"
-                  onClick={() => handleCanteenClick(canteen.id)}
-                >
-                  <div>
-                    <h3 className="font-semibold text-foreground text-lg tracking-normal">{canteen.name}</h3>
-                    <p className="text-xs text-muted-foreground font-medium">
-                      {canteen.locationTag} • {itemCount} items
-                    </p>
-                  </div>
-                  <div className={`transition-transform duration-300 ${expandedCanteen === canteen.id ? 'rotate-180' : ''}`}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4 text-muted-foreground">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
-                  </div>
-                </div>
-                {expandedCanteen === canteen.id && (
-                  <div className="bg-muted/50 p-5 border-t border-border space-y-8 animate-in slide-in-from-top-4">
-                    {Object.entries(groupByCategory(filteredCanteenItems)).map(([category, items]) => (
-                      <div key={category} className="space-y-3">
-                        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide px-1">
-                          {category} ({items.length})
-                        </h4>
-                        <div className="space-y-3">
-                          {items.map(item => (
-                            <MenuCard key={item.id} item={item} onShowToast={setToastMessage} />
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                    {filteredCanteenItems.length === 0 && (
-                      <p className="text-center py-4 text-muted-foreground text-sm">
-                        No items available{vegPref === 'veg' ? ' (veg filter applied)' : ''}.
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
         </div>
       )}
 
@@ -352,10 +320,7 @@ const Explore: React.FC = () => {
   );
 };
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
 const MenuCard: React.FC<{ item: MenuItem; onShowToast: (msg: string) => void }> = ({ item, onShowToast }) => {
   const { addToBag } = useBag();
 
@@ -365,11 +330,7 @@ const MenuCard: React.FC<{ item: MenuItem; onShowToast: (msg: string) => void }>
   };
 
   return (
-<<<<<<< HEAD
     <div className="flex-none w-80 flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm hover:border-primary/50 transition-all snap-start">
-=======
-    <div className="flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm hover:border-primary/50 transition-all">
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
       <div className="flex items-center gap-4">
         <div className="text-3xl">{item.emoji || '🍱'}</div>
         <div>
