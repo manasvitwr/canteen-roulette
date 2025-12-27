@@ -144,7 +144,7 @@ const Home: React.FC = () => {
   }, [selectedPopularItem]);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 pt-6 pb-24 space-y-10 animate-apple-in">
+    <div className="mx-auto max-w-5xl px-6 pt-6 pb-24 space-y-6 sm:space-y-10 animate-apple-in">
       {/* Greeting Header */}
       <section className="text-left">
         <p className="text-sm text-muted-foreground font-medium tracking-tight mb-1">
