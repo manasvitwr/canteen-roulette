@@ -11,7 +11,6 @@ const Profile: React.FC = () => {
   const { user, isGuest, logout, login } = useAuth();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
-<<<<<<< HEAD
 
   // Safe data fetching with error handling
   let currentVegPref: VegPreference = 'veg';
@@ -25,11 +24,6 @@ const Profile: React.FC = () => {
   } catch (error) {
     console.error('[Profile] Error loading data:', error);
   }
-=======
-  const currentVegPref = getVegPref();
-  const orders = getLocalOrders();
-  const uniqueItems = new Set(orders.map(o => o.item.id)).size;
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
 
   const handleVegToggle = (pref: VegPreference) => {
     if (user) {
