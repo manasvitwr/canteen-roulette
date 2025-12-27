@@ -26,7 +26,7 @@ export const RouletteBanner: React.FC<RouletteBannerProps> = ({ onSpinClick }) =
     }, []);
 
     return (
-        <section className="relative rounded-[2rem] bg-gradient-to-b from-neutral-850 via-neutral-825 to-neutral-800 px-8 py-4 shadow-sm border border-white/5 overflow-hidden backdrop-blur-sm">
+        <section className="relative rounded-[2rem] bg-gradient-to-b from-neutral-850 via-neutral-825 to-neutral-800 px-4 sm:px-8 py-4 shadow-sm border border-white/5 overflow-hidden backdrop-blur-sm">
             {/* outer grey sheen, less black */}
             <div className="pointer-events-none absolute inset-px rounded-[1.9rem] bg-gradient-to-b from-white/4 via-transparent to-black/10" />
 
