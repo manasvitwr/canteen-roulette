@@ -10,10 +10,7 @@
   },
   "dependencies": {
     "firebase": "^12.7.0",
-<<<<<<< HEAD
     "geist": "^1.5.1",
-=======
->>>>>>> 09ea8e369d2dbd1586a2456433f584d949ee3c71
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router-dom": "^7.11.0"
