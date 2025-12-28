@@ -42,7 +42,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             {user?.photoURL ? (
               <img src={user.photoURL} alt="Profile" className="w-9 h-9 rounded-full border border-border shadow-sm object-cover" />
             ) : (
-              <img src="/assets/guest.png" alt="Guest" className="w-9 h-9 rounded-full border border-border shadow-sm object-cover" />
+              <img src="/assets/img/3d/guest.png" alt="Guest" className="w-9 h-9 rounded-full border border-border shadow-sm object-cover" />
             )}
           </div>
         </div>
