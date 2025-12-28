@@ -1,27 +1,50 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { HomeIcon, SearchIcon, OrdersIcon, ProfileIcon } from '../common/Icons.tsx';
+import { cn } from '@/lib/utils';
 
-const NavItem: React.FC<{ to: string, icon: React.ReactNode, label: string }> = ({ to, icon, label }) => (
-  <NavLink
-    to={to}
-    className={({ isActive }) => `
-      flex flex-col items-center gap-1.5 transition-all duration-300 px-4 py-1
-      ${isActive ? 'text-primary font-semibold' : 'text-muted-foreground hover:text-foreground'}
-    `}
+interface NavItemProps {
+  isActive: boolean;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  iconSize?: string;
+}
+
+const NavItem: React.FC<NavItemProps> = ({ isActive, href, icon: Icon, label, iconSize = "w-6 h-6" }) => (
+  <Link
+    to={href}
+    className={cn(
+      "flex flex-col items-center gap-1 p-2 rounded-lg transition-all group",
+      isActive
+        ? "text-primary"
+        : "text-muted-foreground group-hover:text-foreground/80"
+    )}
   >
-    <div className="w-6 h-6 transition-transform group-active:scale-90">{icon}</div>
-    <span className="text-[10px] font-medium tracking-tight">{label}</span>
-  </NavLink>
+    <Icon className={iconSize} />
+    <span className="text-xs font-medium tracking-tight">{label}</span>
+  </Link>
 );
 
-export const BottomNav: React.FC = () => (
-  <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border px-2 py-4">
-    <div className="flex justify-around items-center max-w-md mx-auto group">
-      <NavItem to="/" icon={<HomeIcon />} label="Home" />
-      <NavItem to="/explore" icon={<SearchIcon />} label="Explore" />
-      <NavItem to="/orders" icon={<OrdersIcon />} label="Orders" />
-      <NavItem to="/profile" icon={<ProfileIcon />} label="Profile" />
+export const BottomNav: React.FC = () => {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-neutral-950/90 via-neutral-900/50 to-transparent backdrop-blur-xl border-t border-neutral-800/50 px-4 pb-4 pt-2">
+      <div className="flex items-center justify-around max-w-md mx-auto">
+        {/* Home */}
+        <NavItem isActive={currentPath === '/'} href="/" icon={HomeIcon} label="Home" />
+
+        {/* Explore */}
+        <NavItem isActive={currentPath === '/explore'} href="/explore" icon={SearchIcon} label="Explore" />
+
+        {/* Orders */}
+        <NavItem isActive={currentPath === '/orders'} href="/orders" icon={OrdersIcon} label="Orders" iconSize="w-7 h-7" />
+
+        {/* Profile */}
+        <NavItem isActive={currentPath === '/profile'} href="/profile" icon={ProfileIcon} label="Profile" />
+      </div>
     </div>
-  </nav>
-);
+  );
+};
