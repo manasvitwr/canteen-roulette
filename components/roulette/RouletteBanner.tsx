@@ -1,29 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-
-const FOOD_EMOJIS = ["🍕", "🍔", "🍟", "🌯", "🍛", "🍜", "🥪", "🥗", "🥤", "☕", "🍩", "🧇", "🌮", "🥙", "🥯", "🥘"];
 
 interface RouletteBannerProps {
     onSpinClick: () => void;
 }
 
 export const RouletteBanner: React.FC<RouletteBannerProps> = ({ onSpinClick }) => {
-    const [emojiSequence, setEmojiSequence] = useState<Array<{ id: string; emoji: string }>>([]);
-
-    useEffect(() => {
-        const generateEmoji = () => {
-            const randomEmoji = FOOD_EMOJIS[Math.floor(Math.random() * FOOD_EMOJIS.length)];
-            const id = Math.random().toString(36);
-            setEmojiSequence(prev => [...prev, { id, emoji: randomEmoji }]);
-
-            setTimeout(() => {
-                setEmojiSequence(prev => prev.filter(item => item.id !== id));
-            }, 4000);
-        };
-
-        const interval = setInterval(generateEmoji, 120);
-        return () => clearInterval(interval);
-    }, []);
 
     return (
         <section className="relative rounded-[2rem] bg-gradient-to-b from-neutral-850 via-neutral-825 to-neutral-800 px-4 sm:px-8 py-4 shadow-sm border border-white/5 overflow-hidden backdrop-blur-sm">
@@ -39,21 +21,6 @@ export const RouletteBanner: React.FC<RouletteBannerProps> = ({ onSpinClick }) =
                         <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">
                             Tap to play the roulette and we'll pick something for you.
                         </p>
-                    </div>
-
-                    {/* emoji strip - desktop only */}
-                    <div className="relative w-[300px] h-[70px] overflow-hidden rounded-lg hidden lg:block">
-                        <div className="absolute inset-0 bg-gradient-to-r from-neutral-900 via-transparent to-neutral-900 pointer-events-none z-10" />
-                        <div className="flex items-center h-full gap-3 whitespace-nowrap">
-                            {emojiSequence.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className="flex items-center justify-center w-[70px] h-[70px] rounded-lg bg-neutral-900/70 border border-neutral-700/40 shadow-md flex-shrink-0 animate-slide-in"
-                                >
-                                    <span className="text-3xl">{item.emoji}</span>
-                                </div>
-                            ))}
-                        </div>
                     </div>
                 </div>
 
