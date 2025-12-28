@@ -40,9 +40,11 @@ const Profile: React.FC = () => {
     return (
       <div className="mx-auto max-w-5xl px-4 py-8 space-y-10 animate-in fade-in slide-in-from-top-8 duration-700">
         <div className="flex flex-col items-center text-center space-y-6 pt-4">
-          <div className="w-24 h-24 rounded-full bg-card flex items-center justify-center border-4 border-border shadow-xl">
-            <span className="text-4xl opacity-40">👤</span>
-          </div>
+          <img
+            src="/assets/img/3d/guest.png"
+            alt="Guest"
+            className="w-24 h-24 rounded-full object-cover ring-4 ring-border shadow-xl"
+          />
           <div>
             <h2 className="text-2xl font-semibold text-foreground tracking-tight">Guest Explorer</h2>
             <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider mt-1">Anonymous session</p>
