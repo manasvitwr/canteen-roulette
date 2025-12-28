@@ -60,35 +60,97 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 dark:bg-neutral-950 flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center px-4 py-12">
       {/* Hero Card */}
-      <div className="flex flex-col items-center gap-6 rounded-[3rem] bg-white dark:bg-neutral-900 border border-neutral-200/50 dark:border-neutral-800/30 px-8 py-12 shadow-2xl max-w-md w-full text-center animate-in fade-in zoom-in duration-700">
+      <div className="flex flex-col items-center gap-8 rounded-[2rem] bg-card/80 backdrop-blur-xl border border-border px-8 sm:px-12 py-12 sm:py-16 shadow-soft-md max-w-md w-full text-center animate-in fade-in zoom-in duration-700">
 
-        {/* Slot Machine Icon */}
-        <div className="relative mb-2">
-          <div className="text-7xl drop-shadow-[0_0_15px_rgba(249,115,22,0.5)] animate-bounce">🎰</div>
-          <div className="absolute -inset-4 bg-primary/20 blur-3xl rounded-full -z-10"></div>
+        {/* Logo SVG */}
+        <div className="relative">
+          <svg className="w-20 h-20 sm:w-24 sm:h-24 mx-auto drop-shadow-lg" viewBox="0 0 371 352" xmlns="http://www.w3.org/2000/svg">
+            {/* Background */}
+            <rect width="371" height="352" fill="#F5FF00" />
+
+            {/* Everything shifted slightly down */}
+            <g transform="translate(0,10)">
+              {/* LEFT CLUSTER */}
+              {/* Column 1 */}
+              <rect x="54" y="72" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="58" y="76" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              <rect x="54" y="134" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="58" y="138" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              <rect x="54" y="196" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="58" y="200" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              {/* Column 2 */}
+              <rect x="114" y="72" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="118" y="76" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              <rect x="114" y="196" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="118" y="200" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              {/* RIGHT CLUSTER */}
+              {/* Row 1 */}
+              <rect x="200" y="72" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="204" y="76" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              <rect x="260" y="72" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="264" y="76" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              {/* Row 2 */}
+              <rect x="200" y="134" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="204" y="138" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              <rect x="260" y="134" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="264" y="138" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              {/* Row 3 */}
+              <rect x="200" y="196" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="204" y="200" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              {/* 6th R box */}
+              <rect x="292" y="196" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="296" y="200" width="46" height="46" rx="8" fill="#FF4A1F" />
+
+              {/* CONNECTOR (ends at center of 6th box) */}
+              <path
+                d="
+                  M227 99
+                  H295
+                  V161
+                  H227
+                  L319 223
+                "
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </g>
+          </svg>
         </div>
 
-        <div>
-          <h2 className="text-4xl font-black text-neutral-900 dark:text-white tracking-tight mb-3">
+        <div className="space-y-3">
+          <h1 className="text-3xl sm:text-4xl font-bold font-sans text-foreground tracking-tight">
             Canteen Roulette
-          </h2>
-          <p className="text-neutral-500 dark:text-neutral-400 font-medium text-sm leading-relaxed max-w-[280px] mx-auto">
-            An unofficial Somaiya food decision helper for hungry students.
+          </h1>
+          <p className="text-muted-foreground font-sans text-sm sm:text-base leading-relaxed max-w-[300px] mx-auto">
+            Fastest way to decide what to eat on campus
           </p>
         </div>
 
-        <div className="w-full space-y-4 mt-4">
+        <div className="w-full space-y-4 mt-2">
           {/* Primary Action: Google Sign In */}
-          <div className="relative group">
+          <div className="relative">
             <button
               onClick={handleGoogleSignIn}
               disabled={loading}
-              className="w-full py-4 px-6 bg-neutral-50 hover:bg-neutral-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 disabled:bg-neutral-100 disabled:text-neutral-400 text-neutral-900 dark:text-white rounded-2xl shadow-lg flex items-center justify-center gap-3 font-bold transition-all active:scale-[0.98] relative overflow-hidden ring-1 ring-neutral-200 dark:ring-neutral-700"
+              className="w-full py-4 px-6 bg-primary hover:bg-primary/90 disabled:bg-primary/50 disabled:cursor-not-allowed text-primary-foreground rounded-xl shadow-md flex items-center justify-center gap-3 font-semibold font-sans transition-all active:scale-[0.98] text-sm sm:text-base"
             >
               {loading ? (
-                <div className="animate-spin h-5 w-5 border-2 border-primary border-t-transparent rounded-full"></div>
+                <div className="animate-spin h-5 w-5 border-2 border-primary-foreground border-t-transparent rounded-full"></div>
               ) : (
                 <>
                   <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -102,28 +164,28 @@ const Login: React.FC = () => {
               )}
             </button>
             {error && (
-              <p className="text-[11px] text-destructive font-bold mt-3 animate-in fade-in slide-in-from-top-1">
+              <p className="text-xs text-destructive font-semibold font-sans mt-3 animate-in fade-in slide-in-from-top-1">
                 {error}
               </p>
             )}
           </div>
 
           <div className="flex items-center gap-4 py-2">
-            <div className="h-px bg-neutral-200 dark:bg-neutral-800 flex-1"></div>
-            <span className="text-[10px] font-black text-neutral-400 dark:text-neutral-600 uppercase tracking-widest">Or</span>
-            <div className="h-px bg-neutral-200 dark:bg-neutral-800 flex-1"></div>
+            <div className="h-px bg-border flex-1"></div>
+            <span className="text-[10px] font-bold font-sans text-muted-foreground uppercase tracking-widest">Or</span>
+            <div className="h-px bg-border flex-1"></div>
           </div>
 
           {/* Secondary Action: Guest Mode */}
           <button
             onClick={handleGuestContinue}
-            className="w-full py-4 border border-neutral-200 dark:border-neutral-800 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-white rounded-2xl font-bold transition-all active:scale-[0.98]"
+            className="w-full py-4 px-6 border-2 border-border text-foreground hover:bg-secondary hover:border-border/80 rounded-xl font-semibold font-sans transition-all active:scale-[0.98] text-sm sm:text-base"
           >
             Continue as Guest
           </button>
         </div>
 
-        <p className="mt-6 text-[10px] font-black text-neutral-300 dark:text-neutral-700 uppercase tracking-[0.3em]">
+        <p className="mt-4 text-[10px] font-bold font-sans text-muted-foreground uppercase tracking-[0.3em]">
           Somaiya Vidyavihar University
         </p>
       </div>
