@@ -213,7 +213,12 @@ const Explore: React.FC = () => {
               {canteens.filter(c => c.type === 'mess').length > 0 && (
                 <div className="space-y-4">
                   <h2 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase px-2">Mess</h2>
-                  {canteens.filter(c => c.type === 'mess').map(canteen => {
+                  {canteens.filter(c => c.type === 'mess').sort((a, b) => {
+                    // Polytechnic Hostel first
+                    if (a.id === 'poly-hostel') return -1;
+                    if (b.id === 'poly-hostel') return 1;
+                    return 0;
+                  }).map(canteen => {
                     const canteenItems = getCanteenItems(canteen.id);
                     const filteredCanteenItems = canteenItems.filter(item => vegPref === 'veg' ? item.isVeg : true);
                     const itemCount = filteredCanteenItems.length;
@@ -251,7 +256,7 @@ const Explore: React.FC = () => {
                             <div>
                               <h3 className="font-semibold text-foreground text-lg tracking-normal">{canteen.name}</h3>
                               <p className="text-xs text-muted-foreground font-medium">
-                                {isPdfMenu ? '₹70 per plate - Unlimited serving' : `${canteen.locationTag} • ${itemCount} items`}
+                                {isPdfMenu ? 'Somaiya Vidyavihar Campus' : `${canteen.locationTag} • ${itemCount} items`}
                               </p>
                             </div>
                           </div>
@@ -268,18 +273,35 @@ const Explore: React.FC = () => {
                         {!isLocked && expandedCanteen === canteen.id && (
                           <div className="bg-muted/50 p-5 border-t border-border space-y-4 animate-in slide-in-from-top-4">
                             {isPdfMenu ? (
-                              // PDF menu button for Polytechnic
-                              <div className="flex flex-col items-center gap-3 py-4">
-                                <p className="text-sm text-muted-foreground text-center">Detailed mess menu available as PDF</p>
-                                <button
-                                  onClick={handlePdfOpen}
-                                  className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all active:scale-95 font-semibold"
-                                >
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                  </svg>
-                                  Open full PDF menu
-                                </button>
+                              // PDF menu button for Polytechnic with menu preview
+                              <div className="space-y-4">
+                                {/* Menu Preview Card */}
+                                <div className="flex-none w-full flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm">
+                                  <div className="flex items-center gap-4">
+                                    <div className="text-3xl">🍛</div>
+                                    <div>
+                                      <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal font-sans">Mess Thali</h4>
+                                      <div className="flex items-center gap-2 mt-0.5">
+                                        <p className="font-bold text-xs" style={{ color: '#F5FF00' }}>₹70 / Plate</p>
+                                        <span className="text-[10px] font-medium text-muted-foreground font-sans">Unlimited</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* PDF Button */}
+                                <div className="flex flex-col items-center gap-3 py-4">
+                                  <p className="text-sm text-muted-foreground text-center font-sans">Detailed mess menu available as PDF</p>
+                                  <button
+                                    onClick={handlePdfOpen}
+                                    className="flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all active:scale-95 font-semibold font-sans"
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
+                                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                    </svg>
+                                    Open full PDF menu
+                                  </button>
+                                </div>
                               </div>
                             ) : (
                               // Regular menu items for other mess
