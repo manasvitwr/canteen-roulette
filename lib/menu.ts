@@ -13,7 +13,7 @@ export function getEmojiForItem(name: string, category: string = ''): string {
   const n = name.toLowerCase();
   const c = category.toLowerCase();
 
-  // Coffee and hot beverages - check first to prioritize over other matches
+  // Coffee and hot Beverages - check first to prioritize over other matches
   if (n.includes('coffee') || n.includes('latte') || n.includes('cappuccino') ||
     n.includes('espresso') || n.includes('americano') || n.includes('macchiato') ||
     n.includes('mocha') || n.includes('affogato') || n.includes('tiramisu') ||
