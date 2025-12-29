@@ -104,21 +104,22 @@ const Profile: React.FC = () => {
       <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden divide-y divide-border">
         <div className="p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <VegIcon isVeg={true} size="w-4 h-4" />
             <span className="text-sm font-semibold text-foreground">Food preference</span>
           </div>
           <div className="flex bg-secondary p-1 rounded-xl">
             <button
               onClick={() => handleVegToggle('veg')}
-              className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all ${currentVegPref === 'veg' ? 'bg-background text-green-500 shadow-sm' : 'text-muted-foreground'}`}
+              className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all flex items-center gap-1.5 ${currentVegPref === 'veg' ? 'bg-background text-green-500 shadow-sm' : 'text-muted-foreground'}`}
             >
+              <VegIcon isVeg={true} size="w-3 h-3" />
               Veg
             </button>
             <button
               onClick={() => handleVegToggle('non-veg')}
-              className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all ${currentVegPref === 'non-veg' ? 'bg-background text-red-500 shadow-sm' : 'text-muted-foreground'}`}
+              className={`px-4 py-1.5 rounded-lg text-[10px] font-bold uppercase transition-all flex items-center gap-1.5 ${currentVegPref === 'non-veg' ? 'bg-background text-red-500 shadow-sm' : 'text-muted-foreground'}`}
             >
-              Both
+              <VegIcon isVeg={false} size="w-3 h-3" />
+              Anything
             </button>
           </div>
         </div>
