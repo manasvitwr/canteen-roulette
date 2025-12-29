@@ -746,9 +746,9 @@ const AdminSeed: React.FC = () => {
 
     const getType = (category: string): FoodType => {
       const c = category.toLowerCase();
-      if (c.includes('coffee') || c.includes('drinks') || c.includes('juice') || c.includes('shake') || c.includes('refreshers') || c.includes('tea')) return 'beverage';
+      if (c.includes('coffee') || c.includes('drinks') || c.includes('juice') || c.includes('shake') || c.includes('refreshers') || c.includes('tea')) return 'Beverage';
       if (c.includes('dishes') || c.includes('bowl') || c.includes('pasta') || c.includes('soup') || c.includes('salad') || c.includes('thali')) return 'meal';
-      return 'snack';
+      return 'Snack';
     };
 
     const getTemperature = (name: string, category: string): Temperature => {
@@ -809,10 +809,10 @@ const AdminSeed: React.FC = () => {
       const canteens = [
         { id: 'engg', name: 'Engineering Canteen', slug: 'engineering-canteen', locationTag: 'Near Bhaskaracharya Building', isActive: true, type: 'canteen' as const },
         { id: 'maggi', name: 'Maggi House', slug: 'maggi-house', locationTag: 'Near AryaBhatta Building', isActive: true, type: 'canteen' as const },
-        { id: 'eklavya', name: 'Eklavya Café', slug: 'eklavya-cafe', locationTag: 'Sports Canteen (opp to Somaiya Sports Academy Building)', isActive: true, type: 'canteen' as const },
+        { id: 'eklavya', name: 'Eklavya Café (Sports Canteen)', slug: 'eklavya-cafe', locationTag: 'Opp. Somaiya Sports Academy Building', isActive: true, type: 'canteen' as const },
         { id: 'aurobindo', name: 'Aurobindo Canteen', slug: 'aurobindo-canteen', locationTag: 'Aurobindo Building', isActive: true, type: 'canteen' as const },
         { id: 'management', name: 'Management Canteen', slug: 'management-canteen', locationTag: 'Management Building', isActive: true, type: 'canteen' as const },
-        { id: 'poly-hostel', name: 'Polytechnic Hostel', slug: 'polytechnic-hostel', locationTag: 'Near K.J Somaiya Polytechnic Building', isActive: true, type: 'mess' as const },
+        { id: 'poly-hostel', name: 'Polytechnic Hostel', slug: 'polytechnic-hostel', locationTag: 'Somaiya Vidyavihar Campus', isActive: true, type: 'mess' as const },
         { id: 'maitreyi-hostel', name: 'Maitreyi Hostel', slug: 'maitreyi-hostel', locationTag: 'Near KJSIM', isActive: true, type: 'mess' as const },
         { id: 'sandipani-hostel', name: 'Sandipani Hostel', slug: 'sandipani-hostel', locationTag: 'Near KJSIM', isActive: true, type: 'mess' as const }
       ];
