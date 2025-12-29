@@ -22,7 +22,7 @@ const Login: React.FC = () => {
 
       if (!user.email?.endsWith('@somaiya.edu')) {
         await signOut(auth);
-        setError('Please use your @somaiya.edu student account to continue.');
+        setError('Campus access only - use your @somaiya.edu Google account.');
         setLoading(false);
         return;
       }
