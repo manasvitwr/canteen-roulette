@@ -44,8 +44,12 @@ export const PastOrderCard: React.FC<{ order: Order }> = ({ order }) => {
         </div>
         <div className="text-right">
           <span className="block text-sm font-bold" style={{ color: '#F5FF00' }}>₹{totalPrice}</span>
-          <span className="text-[10px] text-green-600 font-bold uppercase tracking-wider">Redeemed</span>
         </div>
+      </div>
+
+      {/* Redeemed badge - BOTTOM RIGHT */}
+      <div className="self-end mt-2 flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/20 border border-emerald-400/40 text-emerald-400 text-xs font-semibold rounded-lg w-fit ml-auto">
+        ✓ REDEEMED
       </div>
     </div>
   );
