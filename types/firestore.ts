@@ -9,7 +9,7 @@ export interface Canteen {
   image?: string;
 }
 
-export type FoodType = "meal" | "snack" | "beverage";
+export type FoodType = "meal" | "Snack" | "Beverage";
 export type Temperature = "hot" | "cold";
 
 export interface MenuItem {
