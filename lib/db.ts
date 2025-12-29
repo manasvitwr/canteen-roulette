@@ -9,17 +9,17 @@ export const MOCK_CANTEENS: Canteen[] = [
 ];
 
 export const MOCK_MENU: MenuItem[] = [
-  { id: 'ek-1', canteenId: 'eklavya', name: 'Veg Punjabi Samosa', price: 25, isVeg: true, type: 'snack', temperature: 'hot', tags: ['savoury'], emoji: '🥪' },
-  { id: 'ek-2', canteenId: 'eklavya', name: 'Veg Puff', price: 30, isVeg: true, type: 'snack', temperature: 'hot', tags: ['bakery'], emoji: '🥐' },
-  { id: 'ek-3', canteenId: 'eklavya', name: 'Paneer Chilli Puff', price: 45, isVeg: true, type: 'snack', temperature: 'hot', tags: ['spicy'], emoji: '🥐' },
-  { id: 'ek-4', canteenId: 'eklavya', name: 'Veg Burger', price: 70, isVeg: true, type: 'snack', temperature: 'hot', tags: ['classic'], emoji: '🍔' },
-  { id: 'ek-5', canteenId: 'eklavya', name: 'Paneer Tikka Sandwich', price: 80, isVeg: true, type: 'snack', temperature: 'hot', tags: ['premium'], emoji: '🥪' },
+  { id: 'ek-1', canteenId: 'eklavya', name: 'Veg Punjabi Samosa', price: 25, isVeg: true, type: 'Snack', temperature: 'hot', tags: ['savoury'], emoji: '🥪' },
+  { id: 'ek-2', canteenId: 'eklavya', name: 'Veg Puff', price: 30, isVeg: true, type: 'Snack', temperature: 'hot', tags: ['bakery'], emoji: '🥐' },
+  { id: 'ek-3', canteenId: 'eklavya', name: 'Paneer Chilli Puff', price: 45, isVeg: true, type: 'Snack', temperature: 'hot', tags: ['spicy'], emoji: '🥐' },
+  { id: 'ek-4', canteenId: 'eklavya', name: 'Veg Burger', price: 70, isVeg: true, type: 'Snack', temperature: 'hot', tags: ['classic'], emoji: '🍔' },
+  { id: 'ek-5', canteenId: 'eklavya', name: 'Paneer Tikka Sandwich', price: 80, isVeg: true, type: 'Snack', temperature: 'hot', tags: ['premium'], emoji: '🥪' },
   { id: 'ek-m1', canteenId: 'eklavya', name: 'Veg Kadai', price: 180, isVeg: true, type: 'meal', temperature: 'hot', tags: ['mughlai'], emoji: '🍛' },
   { id: 'ek-m2', canteenId: 'eklavya', name: 'Paneer Tikka Masala', price: 220, isVeg: true, type: 'meal', temperature: 'hot', tags: ['mughlai'], emoji: '🥘' },
-  { id: 'mg-1', canteenId: 'maggi', name: 'Maggi Noodles', price: 25, isVeg: true, type: 'snack', temperature: 'hot', tags: ['classic'], emoji: '🍜' },
-  { id: 'mg-3', canteenId: 'maggi', name: 'Nescafe Frappe', price: 30, isVeg: true, type: 'beverage', temperature: 'cold', tags: ['caffeine'], emoji: '🥤' },
-  { id: 'en-1', canteenId: 'engg', name: 'Schezwan Noodles Franky', price: 50, isVeg: true, type: 'snack', temperature: 'hot', tags: ['frankie'], emoji: '🌯' },
-  { id: 'en-4', canteenId: 'engg', name: 'Orange Juice', price: 52, isVeg: true, type: 'beverage', temperature: 'cold', tags: ['fresh'], emoji: '🍹' },
+  { id: 'mg-1', canteenId: 'maggi', name: 'Maggi Noodles', price: 25, isVeg: true, type: 'Snack', temperature: 'hot', tags: ['classic'], emoji: '🍜' },
+  { id: 'mg-3', canteenId: 'maggi', name: 'Nescafe Frappe', price: 30, isVeg: true, type: 'Beverage', temperature: 'cold', tags: ['caffeine'], emoji: '🥤' },
+  { id: 'en-1', canteenId: 'engg', name: 'Schezwan Noodles Franky', price: 50, isVeg: true, type: 'Snack', temperature: 'hot', tags: ['frankie'], emoji: '🌯' },
+  { id: 'en-4', canteenId: 'engg', name: 'Orange Juice', price: 52, isVeg: true, type: 'Beverage', temperature: 'cold', tags: ['fresh'], emoji: '🍹' },
 ];
 
 const STORAGE_KEYS = {
