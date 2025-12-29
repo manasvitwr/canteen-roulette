@@ -112,7 +112,7 @@ const RouletteModal: React.FC<RouletteModalProps> = ({ isOpen, onClose, onSpin, 
 
         <div className="flex-1 overflow-y-auto scrollbar-none">
           {/* Slot Machine Graphic Area - Optimized container */}
-          <div className="mx-4 sm:mx-5 md:mx-6 mt-4 sm:mt-5 md:mt-6 p-2 sm:p-4 bg-gradient-to-b from-muted to-background rounded-2xl border border-border shadow-inner flex justify-center items-center overflow-hidden">
+          <div className="mx-4 sm:mx-5 md:mx-6 mt-4 sm:mt-5 md:mt-6 p-2 sm:p-3 bg-gradient-to-b from-muted to-background rounded-2xl border border-border shadow-inner flex justify-center items-center overflow-hidden">
             <Roulette isSpinning={isSpinning} resultEmoji={resultEmoji} onFinished={() => { }} />
           </div>
 
