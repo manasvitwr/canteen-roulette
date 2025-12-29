@@ -50,7 +50,7 @@ const Filters: React.FC = () => {
         </div>
 
         <FilterSection label="Budget range" value={budget} onChange={setBudget} options={['any', 'low', 'mid', 'high']} />
-        <FilterSection label="Meal type" value={foodType} onChange={setFoodType} options={['any', 'meal', 'snack', 'beverage']} />
+        <FilterSection label="Meal type" value={foodType} onChange={setFoodType} options={['any', 'meal', 'Snack', 'Beverage']} />
 
         <div className="pt-4">
           <button
