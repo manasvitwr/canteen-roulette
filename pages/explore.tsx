@@ -18,6 +18,8 @@ const Explore: React.FC = () => {
   const vegPref = getVegPref();
   const [expandedCanteen, setExpandedCanteen] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [activeCanteenFilter, setActiveCanteenFilter] = useState<string | null>(null);
+  const [activeCategoryFilter, setActiveCategoryFilter] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadData() {
@@ -66,12 +68,61 @@ const Explore: React.FC = () => {
     }
   };
 
-  // Filter items for search
+  // Filter items for search with tag filters
   const filteredSearchItems = allMenuItems.filter(item => {
     const searchMatch = item.name.toLowerCase().includes(search.toLowerCase());
     const vegMatch = vegPref === 'veg' ? item.isVeg : true;
-    return searchMatch && vegMatch;
+
+    // Apply canteen filter
+    const canteenMatch = activeCanteenFilter
+      ? item.canteenId === activeCanteenFilter
+      : true;
+
+    // Apply category filter
+    const categoryMatch = activeCategoryFilter
+      ? item.category?.toLowerCase() === activeCategoryFilter.toLowerCase()
+      : true;
+
+    return searchMatch && vegMatch && canteenMatch && categoryMatch;
   });
+
+  // Group search results by item name (deduplicate)
+  const groupedSearchItems = filteredSearchItems.reduce((acc, item) => {
+    if (!acc[item.name]) {
+      acc[item.name] = [];
+    }
+    acc[item.name].push(item);
+    return acc;
+  }, {} as Record<string, MenuItem[]>);
+
+  // Define filter tags
+  const canteenTags = [
+    { id: 'engg', label: 'Engineering' },
+    { id: 'aurobindo', label: 'Auro' },
+    { id: 'eklavya', label: 'Eklavya Cafe' },
+    { id: 'management', label: 'Management' },
+  ];
+
+  const categoryTags = [
+    { id: 'Hot', label: 'Hot' },
+    { id: 'Cold', label: 'Cold' },
+    { id: 'Snack', label: 'Snack' },
+    { id: 'Beverage', label: 'Beverage' },
+    { id: 'Meal', label: 'Meal' },
+  ];
+
+  const handleCanteenTagClick = (canteenId: string | null) => {
+    setActiveCanteenFilter(activeCanteenFilter === canteenId ? null : canteenId);
+  };
+
+  const handleCategoryTagClick = (category: string | null) => {
+    setActiveCategoryFilter(activeCategoryFilter === category ? null : category);
+  };
+
+  const clearAllFilters = () => {
+    setActiveCanteenFilter(null);
+    setActiveCategoryFilter(null);
+  };
 
   // Helper function to group items by category
   const groupByCategory = (items: MenuItem[]) => {
@@ -121,7 +172,8 @@ const Explore: React.FC = () => {
   );
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 space-y-8 animate-in fade-in slide-in-from-right-8 duration-700">
+    <div className="mx-auto max-w-5xl px-4 py-8 space-y-6 animate-in fade-in slide-in-from-right-8 duration-700">
+      {/* Search Bar */}
       <div className="relative">
         <input
           type="text"
@@ -132,14 +184,69 @@ const Explore: React.FC = () => {
         />
       </div>
 
+      {/* Filter Tags */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+          {/* All/Clear button */}
+          <button
+            onClick={clearAllFilters}
+            className={`flex-none px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${!activeCanteenFilter && !activeCategoryFilter
+              ? 'bg-primary/10 text-primary border border-primary/20'
+              : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
+              }`}
+          >
+            All
+          </button>
+
+          {/* Canteen Tags */}
+          {canteenTags.map(tag => (
+            <button
+              key={tag.id}
+              onClick={() => handleCanteenTagClick(tag.id)}
+              className={`flex-none px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${activeCanteenFilter === tag.id
+                ? 'bg-primary/10 text-primary border border-primary/20'
+                : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
+                }`}
+            >
+              {tag.label}
+            </button>
+          ))}
+
+          {/* Category Tags */}
+          {categoryTags.map(tag => (
+            <button
+              key={tag.id}
+              onClick={() => handleCategoryTagClick(tag.id)}
+              className={`flex-none px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${activeCategoryFilter === tag.id
+                ? 'bg-primary/10 text-primary border border-primary/20'
+                : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
+                }`}
+            >
+              {tag.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       {search ? (
         <div className="space-y-4">
           <h2 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase px-2">
-            Matching items ({filteredSearchItems.length})
+            Matching items ({Object.keys(groupedSearchItems).length})
           </h2>
-          <div className="flex flex-nowrap overflow-x-auto gap-3 pb-2 snap-x snap-mandatory scrollbar-none">
-            {filteredSearchItems.map(item => <MenuCard key={item.id} item={item} onShowToast={setToastMessage} />)}
-            {filteredSearchItems.length === 0 && (
+          <div className="space-y-3">
+            {Object.entries(groupedSearchItems).map(([itemName, items]) => {
+              // Pick the first item as representative
+              const representativeItem = items[0];
+              return (
+                <SearchResultCard
+                  key={itemName}
+                  item={representativeItem}
+                  availableCanteens={items.map(i => canteens.find(c => c.id === i.canteenId)?.name || i.canteenId)}
+                  onShowToast={setToastMessage}
+                />
+              );
+            })}
+            {Object.keys(groupedSearchItems).length === 0 && (
               <p className="text-center py-10 text-muted-foreground font-medium w-full">No results found.</p>
             )}
           </div>
@@ -275,19 +382,8 @@ const Explore: React.FC = () => {
                             {isPdfMenu ? (
                               // PDF menu button for Polytechnic with menu preview
                               <div className="space-y-4">
-                                {/* Menu Preview Card */}
-                                <div className="flex-none w-full flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm">
-                                  <div className="flex items-center gap-4">
-                                    <div className="text-3xl">🍛</div>
-                                    <div>
-                                      <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal font-sans">Mess Thali</h4>
-                                      <div className="flex items-center gap-2 mt-0.5">
-                                        <p className="font-bold text-xs" style={{ color: '#F5FF00' }}>₹70 / Plate</p>
-                                        <span className="text-[10px] font-medium text-muted-foreground font-sans">Unlimited</span>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
+                                {/* Menu Preview Card - Now Orderable */}
+                                <MessThaliCard onShowToast={setToastMessage} />
 
                                 {/* PDF Button */}
                                 <div className="flex flex-col items-center gap-3 py-4">
@@ -343,6 +439,112 @@ const Explore: React.FC = () => {
 };
 
 
+// Mess Thali Card Component (Orderable)
+const MessThaliCard: React.FC<{ onShowToast: (msg: string) => void }> = ({ onShowToast }) => {
+  const { addToBag } = useBag();
+
+  // Create a mock MenuItem for Mess Thali
+  const messThaliItem: MenuItem = {
+    id: 'mess-thali-poly',
+    canteenId: 'poly-hostel',
+    name: 'Mess Thali',
+    price: 70,
+    category: 'Unlimited',
+    isVeg: true,
+    emoji: '🍛',
+    tags: ['mess', 'unlimited'],
+    slug: 'mess-thali'
+  };
+
+  const handleAddToBag = () => {
+    addToBag(messThaliItem);
+    onShowToast(`Added ${messThaliItem.name} to bag`);
+  };
+
+  const handleOrderNow = () => {
+    addToBag(messThaliItem);
+    onShowToast(`Added ${messThaliItem.name} to bag - Go to Bag to complete order`);
+  };
+
+  return (
+    <div className="flex-none w-full flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm">
+      <div className="flex items-center gap-4">
+        <div className="text-3xl">🍛</div>
+        <div>
+          <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal font-sans">Mess Thali</h4>
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="font-bold text-xs" style={{ color: '#F5FF00' }}>₹70 / Plate</p>
+            <span className="text-[10px] font-medium text-muted-foreground font-sans">Unlimited</span>
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <VegIcon isVeg={true} size="w-3.5 h-3.5" />
+        <button
+          onClick={handleAddToBag}
+          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all active:scale-95"
+        >
+          Add to bag
+        </button>
+        <button
+          onClick={handleOrderNow}
+          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-95"
+        >
+          Order now
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Search Result Card Component (Vertical, with canteen context)
+const SearchResultCard: React.FC<{
+  item: MenuItem;
+  availableCanteens: string[];
+  onShowToast: (msg: string) => void
+}> = ({ item, availableCanteens, onShowToast }) => {
+  const { addToBag } = useBag();
+
+  const handleAddToBag = () => {
+    addToBag(item);
+    onShowToast(`Added ${item.name} to bag`);
+  };
+
+  return (
+    <div className="w-full flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm hover:border-primary/50 transition-all">
+      <div className="flex items-center gap-4">
+        <div className="text-3xl">{item.emoji || '🍱'}</div>
+        <div>
+          <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal">{item.name}</h4>
+          <div className="flex items-center gap-2 mt-0.5">
+            <p className="font-bold text-xs" style={{ color: '#F5FF00' }}>₹{item.price}</p>
+            <span className="text-[10px] font-medium text-muted-foreground">•</span>
+            <span className="text-[10px] font-medium text-muted-foreground">{item.category}</span>
+            {availableCanteens.length > 0 && (
+              <>
+                <span className="text-[10px] font-medium text-muted-foreground">•</span>
+                <span className="text-[10px] font-medium text-muted-foreground">{availableCanteens[0]}</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="flex items-center gap-3">
+        <VegIcon isVeg={item.isVeg} size="w-3.5 h-3.5" />
+        <button
+          onClick={handleAddToBag}
+          className="w-8 h-8 rounded-lg bg-primary hover:bg-primary/90 flex items-center justify-center text-primary-foreground transition-all active:scale-95"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Regular Menu Card Component (Horizontal scroll in canteen sections)
 const MenuCard: React.FC<{ item: MenuItem; onShowToast: (msg: string) => void }> = ({ item, onShowToast }) => {
   const { addToBag } = useBag();
 
