@@ -43,7 +43,7 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order, onPickUp }) =>
                   <p className="text-sm font-semibold text-foreground">{item.name}</p>
                   <div className="flex items-center gap-2">
                     <VegIcon isVeg={item.isVeg} size="w-2.5 h-2.5" />
-                    <span className="text-xs" style={{ color: '#F5FF00' }}>₹{item.price}</span>
+                    <span className="text-xs text-accent">₹{item.price}</span>
                   </div>
                 </div>
               </div>
@@ -51,7 +51,7 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order, onPickUp }) =>
           </div>
           <div className="mt-3 pt-3 border-t border-border flex justify-between items-center">
             <span className="text-sm font-medium text-muted-foreground">Total</span>
-            <span className="text-lg font-bold" style={{ color: '#F5FF00' }}>₹{totalPrice}</span>
+            <span className="text-lg font-bold text-accent">₹{totalPrice}</span>
           </div>
         </div>
       ) : (
@@ -61,7 +61,7 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order, onPickUp }) =>
             <h3 className="text-xl font-semibold text-foreground tracking-normal">{order.item!.name}</h3>
             <div className="flex items-center gap-2 mt-1">
               <VegIcon isVeg={order.item!.isVeg} size="w-3 h-3" />
-              <p className="text-xs font-medium tracking-normal"><span style={{ color: '#F5FF00' }}>₹{order.item!.price}</span> • {order.item!.canteenName}</p>
+              <p className="text-xs font-medium tracking-normal"><span className="text-accent">₹{order.item!.price}</span> • {order.item!.canteenName}</p>
             </div>
           </div>
         </div>
