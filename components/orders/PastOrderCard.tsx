@@ -43,7 +43,7 @@ export const PastOrderCard: React.FC<{ order: Order }> = ({ order }) => {
           )}
         </div>
         <div className="text-right">
-          <span className="block text-sm font-bold" style={{ color: '#F5FF00' }}>₹{totalPrice}</span>
+          <span className="block text-sm font-bold text-accent">₹{totalPrice}</span>
         </div>
       </div>
 
