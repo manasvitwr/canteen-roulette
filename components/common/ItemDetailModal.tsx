@@ -73,7 +73,7 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                         </div>
 
                         <div className="flex items-baseline gap-2">
-                            <span className="text-3xl font-bold" style={{ color: '#F5FF00' }}>
+                            <span className="text-3xl font-bold text-accent">
                                 ₹{item.price}
                             </span>
                         </div>
