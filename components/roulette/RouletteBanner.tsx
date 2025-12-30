@@ -57,7 +57,7 @@ export const RouletteBanner: React.FC<RouletteBannerProps> = ({ onSpinClick }) =
 
                             <Link
                                 to="/filters"
-                                className="text-xs sm:text-sm font-medium hover:opacity-80 underline underline-offset-4 transition-all flex items-center gap-1.5 whitespace-nowrap text-[#F5FF00]"
+                                className="text-xs sm:text-sm font-medium hover:opacity-80 underline underline-offset-4 transition-all flex items-center gap-1.5 whitespace-nowrap text-accent"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
