@@ -78,37 +78,100 @@ export async function getMenuItemsByCanteen(canteenId: string): Promise<MenuItem
 
 export interface MenuFilters {
   isVeg?: boolean;
-  budget?: 'any' | 'low' | 'mid' | 'high';
+  priceMin?: number;
+  priceMax?: number;
   type?: FoodType | 'any';
   temperature?: Temperature | 'any';
+  canteenId?: string;
+  mode?: 'on-campus' | 'off-campus';
 }
+
+/**
+ * Core filtering function for roulette and popular choices.
+ * Applies filters in strict order: exclusions → veg → meal type → price (on-campus only)
+ */
 
 export async function getFilteredMenuItems(filters: MenuFilters): Promise<MenuItem[]> {
   try {
     const menuRef = collection(db, 'menu_items');
     let q = query(menuRef);
-    if (filters.isVeg !== undefined) q = query(q, where('isVeg', '==', filters.isVeg));
+
+    // Firestore-level filters (only for indexable fields)
+    if (filters.isVeg !== undefined) {
+      q = query(q, where('isVeg', '==', filters.isVeg));
+    }
+    if (filters.canteenId) {
+      q = query(q, where('canteenId', '==', filters.canteenId));
+    }
 
     const querySnapshot = await getDocs(q);
     let items = querySnapshot.empty
       ? MOCK_MENU.filter(i => filters.isVeg === undefined || i.isVeg === filters.isVeg) as unknown as MenuItem[]
       : querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as MenuItem));
 
-    if (filters.type && filters.type !== 'any') {
-      items = items.filter(item => item.type === filters.type);
+    // Step 1: Apply exclusions FIRST
+    const { isItemExcluded } = await import('./exclusions.ts');
+    items = items.filter(item => !isItemExcluded(item.name, (item as any).isAddOn));
+
+    // Step 2: Veg filter (already applied in Firestore, but keep for safety)
+    if (filters.isVeg !== undefined) {
+      items = items.filter(item => item.isVeg === filters.isVeg);
     }
 
-    if (filters.budget && filters.budget !== 'any') {
-      items = items.filter(item => {
-        if (filters.budget === 'low') return item.price <= 40;
-        if (filters.budget === 'mid') return item.price > 40 && item.price <= 100;
-        if (filters.budget === 'high') return item.price > 100;
-        return true;
-      });
+    // Step 3: Meal type filter
+    if (filters.type && filters.type !== 'any') {
+      const targetType = filters.type.toLowerCase();
+      items = items.filter(item => item.type.toLowerCase() === targetType);
+    }
+
+    // Step 4: Price range filter (ON-CAMPUS ONLY)
+    // Only apply if mode is on-campus AND price filter is explicitly set
+    const isOnCampus = !filters.mode || filters.mode === 'on-campus';
+    const hasPriceFilter = filters.priceMin !== undefined || filters.priceMax !== undefined;
+
+    if (isOnCampus && hasPriceFilter) {
+      const min = filters.priceMin!;
+      const max = filters.priceMax!;
+      items = items.filter(item => item.price >= min && item.price <= max);
+    }
+
+    // Step 5: Temperature filter (if needed)
+    if (filters.temperature && filters.temperature !== 'any') {
+      items = items.filter(item => item.temperature === filters.temperature);
     }
 
     return items;
   } catch (error) {
+    console.error('Error filtering menu items:', error);
     return MOCK_MENU.filter(i => filters.isVeg === undefined || i.isVeg === filters.isVeg) as unknown as MenuItem[];
+  }
+}
+
+/**
+ * Computes the actual min and max prices from all menu items in Firestore.
+ * Returns { min, max } or null if no items exist.
+ */
+export async function getMenuPriceRange(): Promise<{ min: number; max: number } | null> {
+  try {
+    const menuRef = collection(db, 'menu_items');
+    const querySnapshot = await getDocs(menuRef);
+
+    if (querySnapshot.empty) {
+      // Fallback to mock data
+      const prices = MOCK_MENU.map(item => item.price);
+      return {
+        min: Math.min(...prices),
+        max: Math.max(...prices)
+      };
+    }
+
+    const prices = querySnapshot.docs.map(doc => (doc.data() as MenuItem).price);
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices)
+    };
+  } catch (error) {
+    console.error('Failed to get menu price range:', error);
+    return null;
   }
 }
