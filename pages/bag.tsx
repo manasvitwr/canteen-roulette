@@ -61,7 +61,7 @@ const Bag: React.FC = () => {
                                             {item.name}
                                         </h4>
                                         <div className="flex items-center gap-2 mt-0.5">
-                                            <p className="font-bold text-xs" style={{ color: '#F5FF00' }}>
+                                            <p className="font-bold text-xs text-accent">
                                                 ₹{item.price}
                                             </p>
                                             <VegIcon isVeg={item.isVeg} size="w-3 h-3" />
@@ -98,7 +98,7 @@ const Bag: React.FC = () => {
                         </div>
                         <div className="flex items-center justify-between border-t border-border pt-4">
                             <span className="text-foreground font-bold text-lg">Total</span>
-                            <span className="text-foreground font-bold text-xl" style={{ color: '#F5FF00' }}>
+                            <span className="text-foreground font-bold text-xl text-accent">
                                 ₹{totalPrice}
                             </span>
                         </div>
