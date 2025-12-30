@@ -4,7 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase.ts';
 import { Order } from '../types';
 import { MenuItem as FirestoreMenuItem, Canteen } from '../types/firestore.ts';
-import { getVegPref, getLocalOrders } from '../lib/db.ts';
+import { getVegPref, getLocalOrders, getPriceRange, getFoodTypeFilter } from '../lib/db.ts';
 import { getFilteredMenuItems } from '../lib/menu.ts';
 import RouletteModal from '../components/roulette/RouletteModal.tsx';
 import { RouletteBanner } from '../components/roulette/RouletteBanner.tsx';
@@ -31,14 +31,6 @@ const Home: React.FC = () => {
     setPastOrders(getLocalOrders().slice(0, 3));
     async function loadPopular() {
       try {
-        // Fetch ALL menu items from Firestore
-        const menuRef = collection(db, 'menu_items');
-        const menuSnapshot = await getDocs(menuRef);
-        const allItems = menuSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        } as FirestoreMenuItem));
-
         // Fetch all canteens to get names
         const canteensRef = collection(db, 'canteens');
         const canteensSnapshot = await getDocs(canteensRef);
@@ -51,8 +43,40 @@ const Home: React.FC = () => {
         // Create a map for quick canteen lookup
         const canteenMap = new Map(canteensData.map(c => [c.id, c.name]));
 
-        // Randomly select 4 distinct items
-        const shuffled = [...allItems].sort(() => Math.random() - 0.5);
+        // Get current filters
+        const vegPref = getVegPref();
+        const priceRange = getPriceRange();
+        const foodTypeFilter = getFoodTypeFilter();
+
+        const filters: any = {
+          isVeg: vegPref === 'veg' ? true : undefined,
+          mode: 'on-campus'
+        };
+
+        // Apply price range if set
+        if (priceRange) {
+          filters.priceMin = priceRange.min;
+          filters.priceMax = priceRange.max;
+        }
+
+        // Apply food type filter if set
+        if (foodTypeFilter && foodTypeFilter !== 'any') {
+          filters.type = foodTypeFilter;
+        }
+
+        // Get filtered items (exclusions are applied inside getFilteredMenuItems)
+        let validItems = await getFilteredMenuItems(filters);
+
+        // Fallback: if no items with price filter, try without price filter
+        if (validItems.length === 0 && priceRange) {
+          const filtersNoPrice = { ...filters };
+          delete filtersNoPrice.priceMin;
+          delete filtersNoPrice.priceMax;
+          validItems = await getFilteredMenuItems(filtersNoPrice);
+        }
+
+        // Randomly select 4 distinct items from valid pool
+        const shuffled = [...validItems].sort(() => Math.random() - 0.5);
         const selected = shuffled.slice(0, 4).map(item => ({
           ...item,
           canteenName: canteenMap.get(item.canteenId) || 'Campus Canteen'
@@ -85,16 +109,45 @@ const Home: React.FC = () => {
     setSelectedItem(null);
     try {
       const vegPref = getVegPref();
-      const filtered = await getFilteredMenuItems({
-        isVeg: vegPref === 'veg' ? true : undefined
-      });
-      if (filtered.length === 0) {
+      const priceRange = getPriceRange();
+      const foodTypeFilter = getFoodTypeFilter();
+
+      const filters: any = {
+        isVeg: vegPref === 'veg' ? true : undefined,
+        mode: mode  // Pass mode to filtering function
+      };
+
+      // Apply price range if set (only used for on-campus)
+      if (priceRange) {
+        filters.priceMin = priceRange.min;
+        filters.priceMax = priceRange.max;
+      }
+
+      // Apply food type filter if set
+      if (foodTypeFilter && foodTypeFilter !== 'any') {
+        filters.type = foodTypeFilter;
+      }
+
+      // Get filtered items (exclusions are applied inside getFilteredMenuItems)
+      const validItems = await getFilteredMenuItems(filters);
+
+      if (validItems.length === 0) {
         setIsSpinning(false);
-        alert("No items match your current filters!");
+
+        // Provide specific error message based on mode and active filters
+        if (mode === 'on-campus' && priceRange) {
+          alert(`No items in this price range (₹${priceRange.min}-₹${priceRange.max}). Try adjusting your filters!`);
+        } else if (foodTypeFilter && foodTypeFilter !== 'any') {
+          alert(`No ${foodTypeFilter} items match your current filters!`);
+        } else {
+          alert("No items match your current filters!");
+        }
         return;
       }
+
+      // Apply rarity weighting to valid items
       const weightedList: FirestoreMenuItem[] = [];
-      filtered.forEach(item => {
+      validItems.forEach(item => {
         const weight = item.rarityWeight || 1;
         for (let i = 0; i < weight; i++) weightedList.push(item);
       });
@@ -110,8 +163,9 @@ const Home: React.FC = () => {
         setIsSpinning(false);
       }, 700);
     } catch (error) {
-      console.error(error);
+      console.error('Roulette spin error:', error);
       setIsSpinning(false);
+      alert('An error occurred while spinning. Please try again.');
     }
   };
 
@@ -183,7 +237,7 @@ const Home: React.FC = () => {
                 <div>
                   <h4 className="font-semibold text-foreground text-base tracking-tight">{item.name}</h4>
                   <p className="text-sm font-medium">
-                    <span style={{ color: '#F5FF00' }}>₹{item.price}</span> • {item.type} • <span className="text-muted-foreground">{item.canteenName}</span>
+                    <span className="text-accent font-semibold">₹{item.price}</span> • {item.type} • <span className="text-muted-foreground">{item.canteenName}</span>
                   </p>
                 </div>
               </div>
@@ -223,7 +277,7 @@ const Home: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                <span className="text-sm font-semibold" style={{ color: '#F5FF00' }}>
+                <span className="text-sm font-semibold text-accent">
                   ₹{isBagOrder ? order.items!.reduce((sum, item) => sum + item.price, 0) : displayItem.price}
                 </span>
               </div>
