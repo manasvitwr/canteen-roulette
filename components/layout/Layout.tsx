@@ -12,7 +12,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen pb-24 bg-background text-foreground transition-colors">
-      <header className="sticky top-0 z-40 w-full bg-card/80 backdrop-blur-xl border-b border-border px-4 h-16 flex items-center justify-center">
+      <header className="sticky top-0 z-40 w-full backdrop-blur-xl border-b px-4 h-16 flex items-center justify-center" style={{ backgroundColor: 'var(--nav-bg)', borderBottomColor: 'var(--nav-border)' }}>
         <div className="w-full max-w-5xl flex items-center justify-between">
           <div className="flex items-center">
             <img
