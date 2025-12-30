@@ -25,7 +25,10 @@ export const MOCK_MENU: MenuItem[] = [
 const STORAGE_KEYS = {
   USER: 'cr_user',
   ORDERS: 'cr_orders',
-  PREF: 'cr_veg_pref'
+  PREF: 'cr_veg_pref',
+  PRICE_RANGE: 'cr_price_range',
+  FOOD_TYPE: 'cr_food_type',
+  CANTEEN_FILTER: 'cr_canteen_filter'
 };
 
 export const getLocalUser = (): UserDoc | null => {
@@ -135,4 +138,42 @@ export const getVegPref = (): VegPreference => {
 
 export const setVegPref = (pref: VegPreference) => {
   localStorage.setItem(STORAGE_KEYS.PREF, pref);
+};
+
+export interface PriceRange {
+  min: number;
+  max: number;
+}
+
+export const getPriceRange = (): PriceRange | null => {
+  const data = localStorage.getItem(STORAGE_KEYS.PRICE_RANGE);
+  return data ? JSON.parse(data) : null;
+};
+
+export const setPriceRange = (range: PriceRange) => {
+  localStorage.setItem(STORAGE_KEYS.PRICE_RANGE, JSON.stringify(range));
+};
+
+export const clearPriceRange = () => {
+  localStorage.removeItem(STORAGE_KEYS.PRICE_RANGE);
+};
+
+export const getFoodTypeFilter = (): string | null => {
+  return localStorage.getItem(STORAGE_KEYS.FOOD_TYPE);
+};
+
+export const setFoodTypeFilter = (type: string) => {
+  localStorage.setItem(STORAGE_KEYS.FOOD_TYPE, type);
+};
+
+export const getCanteenFilter = (): string | null => {
+  return localStorage.getItem(STORAGE_KEYS.CANTEEN_FILTER);
+};
+
+export const setCanteenFilter = (canteenId: string) => {
+  localStorage.setItem(STORAGE_KEYS.CANTEEN_FILTER, canteenId);
+};
+
+export const clearCanteenFilter = () => {
+  localStorage.removeItem(STORAGE_KEYS.CANTEEN_FILTER);
 };
