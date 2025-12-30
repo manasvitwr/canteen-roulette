@@ -31,7 +31,7 @@ export const BottomNav: React.FC = () => {
   const currentPath = location.pathname;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-t from-neutral-950/90 via-neutral-900/50 to-transparent backdrop-blur-xl border-t border-neutral-800/50 px-4 pb-4 pt-2">
+    <div className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-xl border-t px-4 pb-4 pt-2" style={{ backgroundColor: 'var(--nav-bg)', borderTopColor: 'var(--nav-border)' }}>
       <div className="flex items-center justify-around max-w-md mx-auto">
         {/* Home */}
         <NavItem isActive={currentPath === '/'} href="/" icon={HomeIcon} label="Home" />
