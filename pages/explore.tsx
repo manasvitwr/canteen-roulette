@@ -473,7 +473,7 @@ const MessThaliCard: React.FC<{ onShowToast: (msg: string) => void }> = ({ onSho
         <div>
           <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal font-sans">Mess Thali</h4>
           <div className="flex items-center gap-2 mt-0.5">
-            <p className="font-bold text-xs" style={{ color: '#F5FF00' }}>₹70 / Plate</p>
+            <p className="font-bold text-xs text-accent">₹70 / Plate</p>
             <span className="text-[10px] font-medium text-muted-foreground font-sans">Unlimited</span>
           </div>
         </div>
@@ -517,7 +517,7 @@ const SearchResultCard: React.FC<{
         <div>
           <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal">{item.name}</h4>
           <div className="flex items-center gap-2 mt-0.5">
-            <p className="font-bold text-xs" style={{ color: '#F5FF00' }}>₹{item.price}</p>
+            <p className="font-bold text-xs text-accent">₹{item.price}</p>
             <span className="text-[10px] font-medium text-muted-foreground">•</span>
             <span className="text-[10px] font-medium text-muted-foreground">{item.category}</span>
             {availableCanteens.length > 0 && (
@@ -560,7 +560,7 @@ const MenuCard: React.FC<{ item: MenuItem; onShowToast: (msg: string) => void }>
         <div>
           <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal">{item.name}</h4>
           <div className="flex items-center gap-2 mt-0.5">
-            <p className="font-bold text-xs" style={{ color: '#F5FF00' }}>₹{item.price}</p>
+            <p className="font-bold text-xs text-accent">₹{item.price}</p>
             <span className="text-[10px] font-medium text-muted-foreground">{item.category}</span>
           </div>
         </div>
