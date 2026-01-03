@@ -67,10 +67,8 @@ export async function createSimulatedOrder(userId: string, item: MenuItem): Prom
     otp: Math.floor(1000 + Math.random() * 9000).toString(),
   };
 
-  // Local first for speed
   saveOrder(orderData);
 
-  // Firestore second (non-blocking)
   setDoc(doc(db, 'orders', orderId), {
     userId,
     itemIds: [item.id],
@@ -86,26 +84,22 @@ export async function createSimulatedOrder(userId: string, item: MenuItem): Prom
 export async function createBagOrder(userId: string, items: MenuItem[]): Promise<string> {
   const orderId = 'ord_' + Date.now();
 
-  // Base time for single item: 12-25 minutes (average ~18)
-  // For bag orders: add 30-50% more time
-  const baseMinutes = Math.floor(Math.random() * 13) + 12; // 12-24 minutes
-  const multiplier = 1.3 + (Math.random() * 0.2); // 1.3 to 1.5
+  const baseMinutes = Math.floor(Math.random() * 13) + 12;
+  const multiplier = 1.3 + (Math.random() * 0.2);
   const estimatedMinutes = Math.floor(baseMinutes * multiplier);
 
   const orderData: Order = {
     id: orderId,
     userId,
-    items, // Multiple items for bag order
+    items,
     status: 'queued',
     createdAt: Date.now(),
     estimatedMinutes,
     otp: Math.floor(1000 + Math.random() * 9000).toString(),
   };
 
-  // Local first for speed
   saveOrder(orderData);
 
-  // Firestore second (non-blocking)
   setDoc(doc(db, 'orders', orderId), {
     userId,
     itemIds: items.map(item => item.id),

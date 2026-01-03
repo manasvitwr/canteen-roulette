@@ -9,7 +9,6 @@ export const RouletteBanner: React.FC<RouletteBannerProps> = ({ onSpinClick }) =
 
     return (
         <section className="relative rounded-[2rem] bg-gradient-to-b from-neutral-850 via-neutral-825 to-neutral-800 px-4 sm:px-8 py-4 shadow-sm border border-white/5 overflow-hidden backdrop-blur-sm">
-            {/* outer grey sheen, less black */}
             <div className="pointer-events-none absolute inset-px rounded-[1.9rem] bg-gradient-to-b from-white/4 via-transparent to-black/10" />
 
             <div className="relative z-10">
@@ -24,19 +23,14 @@ export const RouletteBanner: React.FC<RouletteBannerProps> = ({ onSpinClick }) =
                     </div>
                 </div>
 
-                {/* inner frame */}
                 <div className="relative rounded-xl bg-gradient-to-b from-neutral-825 via-neutral-800 to-neutral-775 border border-neutral-700/40 p-3 sm:p-4 mb-2 sm:mb-3 overflow-hidden">
-                    {/* warm base glows */}
                     <div className="pointer-events-none absolute -left-20 top-10 h-44 w-44 rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,140,0,0.22),_transparent_65%)]" />
                     <div className="pointer-events-none absolute left-10 bottom-0 h-40 w-56 rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,215,0,0.16),_transparent_60%)]" />
-                    {/* wider purple + red near knob */}
                     <div className="pointer-events-none absolute left-40 top-6 h-40 w-52 rounded-full bg-[radial-gradient(circle_at_center,_rgba(186,104,255,0.26),_transparent_65%)]" />
                     <div className="pointer-events-none absolute left-52 bottom-4 h-40 w-56 rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,80,80,0.22),_transparent_65%)]" />
-                    {/* soft wash */}
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-black/20" />
 
                     <div className="relative flex items-center justify-start gap-12 md:gap-48">
-                        {/* slot machine – smaller on mobile, shifted left */}
                         <div className="flex justify-start w-auto -ml-4 sm:-ml-6 md:-ml-10">
                             <img
                                 src="/assets/img/3d/slot-machine.png"
@@ -46,7 +40,6 @@ export const RouletteBanner: React.FC<RouletteBannerProps> = ({ onSpinClick }) =
                             />
                         </div>
 
-                        {/* buttons – much closer to slot machine, responsive sizing */}
                         <div className="flex flex-col items-center gap-5 w-auto pr-2 sm:pr-4">
                             <button
                                 onClick={onSpinClick}

@@ -31,7 +31,6 @@ const Home: React.FC = () => {
     setPastOrders(getLocalOrders().slice(0, 3));
     async function loadPopular() {
       try {
-        // Fetch all canteens to get names
         const canteensRef = collection(db, 'canteens');
         const canteensSnapshot = await getDocs(canteensRef);
         const canteensData = canteensSnapshot.docs.map(doc => ({
@@ -40,10 +39,8 @@ const Home: React.FC = () => {
         } as Canteen));
         setCanteens(canteensData);
 
-        // Create a map for quick canteen lookup
         const canteenMap = new Map(canteensData.map(c => [c.id, c.name]));
 
-        // Get current filters
         const vegPref = getVegPref();
         const priceRange = getPriceRange();
         const foodTypeFilter = getFoodTypeFilter();
@@ -53,21 +50,17 @@ const Home: React.FC = () => {
           mode: 'on-campus'
         };
 
-        // Apply price range if set
         if (priceRange) {
           filters.priceMin = priceRange.min;
           filters.priceMax = priceRange.max;
         }
 
-        // Apply food type filter if set
         if (foodTypeFilter && foodTypeFilter !== 'any') {
           filters.type = foodTypeFilter;
         }
 
-        // Get filtered items (exclusions are applied inside getFilteredMenuItems)
         let validItems = await getFilteredMenuItems(filters);
 
-        // Fallback: if no items with price filter, try without price filter
         if (validItems.length === 0 && priceRange) {
           const filtersNoPrice = { ...filters };
           delete filtersNoPrice.priceMin;
@@ -75,7 +68,6 @@ const Home: React.FC = () => {
           validItems = await getFilteredMenuItems(filtersNoPrice);
         }
 
-        // Randomly select 4 distinct items from valid pool
         const shuffled = [...validItems].sort(() => Math.random() - 0.5);
         const selected = shuffled.slice(0, 4).map(item => ({
           ...item,
@@ -114,27 +106,23 @@ const Home: React.FC = () => {
 
       const filters: any = {
         isVeg: vegPref === 'veg' ? true : undefined,
-        mode: mode  // Pass mode to filtering function
+        mode: mode
       };
 
-      // Apply price range if set (only used for on-campus)
       if (priceRange) {
         filters.priceMin = priceRange.min;
         filters.priceMax = priceRange.max;
       }
 
-      // Apply food type filter if set
       if (foodTypeFilter && foodTypeFilter !== 'any') {
         filters.type = foodTypeFilter;
       }
 
-      // Get filtered items (exclusions are applied inside getFilteredMenuItems)
       const validItems = await getFilteredMenuItems(filters);
 
       if (validItems.length === 0) {
         setIsSpinning(false);
 
-        // Provide specific error message based on mode and active filters
         if (mode === 'on-campus' && priceRange) {
           alert(`No items in this price range (₹${priceRange.min}-₹${priceRange.max}). Try adjusting your filters!`);
         } else if (foodTypeFilter && foodTypeFilter !== 'any') {
@@ -145,7 +133,6 @@ const Home: React.FC = () => {
         return;
       }
 
-      // Apply rarity weighting to valid items
       const weightedList: FirestoreMenuItem[] = [];
       validItems.forEach(item => {
         const weight = item.rarityWeight || 1;
@@ -186,7 +173,6 @@ const Home: React.FC = () => {
     }
   };
 
-  // ESC key to close modal
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && selectedPopularItem) {
@@ -259,7 +245,6 @@ const Home: React.FC = () => {
         </div>
         <div className="space-y-3">
           {pastOrders.map((order) => {
-            // Handle both single item and bag orders
             const isBagOrder = !!order.items;
             const displayItem = isBagOrder ? order.items![0] : order.item!;
             const itemCount = isBagOrder ? order.items!.length : 1;

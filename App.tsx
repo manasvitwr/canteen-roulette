@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
-// Fixed casing in imports to match the files already included in the compilation set (lowercase versions).
 import Login from './pages/login.tsx';
 import Home from './pages/home.tsx';
 import Explore from './pages/explore.tsx';
@@ -16,8 +15,6 @@ import Layout from './components/layout/Layout.tsx';
 
 import { ThemeProvider } from './lib/ThemeContext.tsx';
 import { BagProvider } from './lib/BagContext.tsx';
-
-// ... (other imports)
 
 const AuthContext = createContext<{
   user: UserDoc | null;
@@ -37,9 +34,7 @@ const AuthContext = createContext<{
 
 export const useAuth = () => useContext(AuthContext);
 
-// Main App Component
 const AppContent: React.FC = () => {
-  // Moved theme logic to ThemeProvider
   const [user, setUser] = useState<UserDoc | null>(null);
   const [isGuest, setIsGuest] = useState<boolean>(false);
   const [loading, setLoading] = useState(true);

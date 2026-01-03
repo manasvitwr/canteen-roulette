@@ -29,7 +29,6 @@ const Explore: React.FC = () => {
 
         console.log('[Explore] Starting to load data from Firestore...');
 
-        // Fetch all canteens
         const canteensRef = collection(db, 'canteens');
         const canteensQuery = query(canteensRef, where('isActive', '==', true));
         const canteensSnapshot = await getDocs(canteensQuery);
@@ -38,7 +37,6 @@ const Explore: React.FC = () => {
           ...doc.data()
         } as Canteen));
 
-        // Fetch ALL menu items at once
         const menuRef = collection(db, 'menu_items');
         const menuSnapshot = await getDocs(menuRef);
         const menuData = menuSnapshot.docs.map(doc => ({
@@ -68,17 +66,14 @@ const Explore: React.FC = () => {
     }
   };
 
-  // Filter items for search with tag filters
   const filteredSearchItems = allMenuItems.filter(item => {
     const searchMatch = item.name.toLowerCase().includes(search.toLowerCase());
     const vegMatch = vegPref === 'veg' ? item.isVeg : true;
 
-    // Apply canteen filter
     const canteenMatch = activeCanteenFilter
       ? item.canteenId === activeCanteenFilter
       : true;
 
-    // Apply category filter
     const categoryMatch = activeCategoryFilter
       ? item.category?.toLowerCase() === activeCategoryFilter.toLowerCase()
       : true;
@@ -86,7 +81,6 @@ const Explore: React.FC = () => {
     return searchMatch && vegMatch && canteenMatch && categoryMatch;
   });
 
-  // Group search results by item name (deduplicate)
   const groupedSearchItems = filteredSearchItems.reduce((acc, item) => {
     if (!acc[item.name]) {
       acc[item.name] = [];
@@ -95,7 +89,6 @@ const Explore: React.FC = () => {
     return acc;
   }, {} as Record<string, MenuItem[]>);
 
-  // Define filter tags
   const canteenTags = [
     { id: 'engg', label: 'Engineering' },
     { id: 'aurobindo', label: 'Auro' },
@@ -134,12 +127,10 @@ const Explore: React.FC = () => {
     }, {} as Record<string, MenuItem[]>);
   };
 
-  // Get items for a specific canteen
   const getCanteenItems = (canteenId: string): MenuItem[] => {
     return allMenuItems.filter(item => item.canteenId === canteenId);
   };
 
-  // Get icon for canteen based on type and ID
   const getCanteenIcon = (canteen: Canteen) => {
     if (canteen.type === 'mess') {
       return <HostelIcon />;
@@ -187,7 +178,6 @@ const Explore: React.FC = () => {
       {/* Filter Tags */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-          {/* All/Clear button */}
           <button
             onClick={clearAllFilters}
             className={`flex-none px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${!activeCanteenFilter && !activeCategoryFilter
@@ -198,7 +188,6 @@ const Explore: React.FC = () => {
             All
           </button>
 
-          {/* Canteen Tags */}
           {canteenTags.map(tag => (
             <button
               key={tag.id}
@@ -212,7 +201,6 @@ const Explore: React.FC = () => {
             </button>
           ))}
 
-          {/* Category Tags */}
           {categoryTags.map(tag => (
             <button
               key={tag.id}
@@ -257,7 +245,6 @@ const Explore: React.FC = () => {
             <p className="text-center py-10 text-neutral-500 dark:text-neutral-400 font-semibold text-sm">No canteens listed yet.</p>
           ) : (
             <>
-              {/* Canteens Section */}
               {canteens.filter(c => c.type !== 'mess').length > 0 && (
                 <div className="space-y-4">
                   <h2 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase px-2">Canteens</h2>
@@ -316,7 +303,6 @@ const Explore: React.FC = () => {
                 </div>
               )}
 
-              {/* Mess Section */}
               {canteens.filter(c => c.type === 'mess').length > 0 && (
                 <div className="space-y-4">
                   <h2 className="text-xs font-semibold tracking-wide text-muted-foreground uppercase px-2">Mess</h2>
@@ -342,7 +328,6 @@ const Explore: React.FC = () => {
 
                     return (
                       <div key={canteen.id} className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden relative">
-                        {/* Locked overlay for Maitreyi & Sandipani */}
                         {isLocked && (
                           <div className="absolute inset-0 z-10 backdrop-blur-sm bg-black/30 flex flex-col items-center justify-center gap-2 rounded-2xl">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-10 h-10 text-white">
@@ -376,16 +361,12 @@ const Explore: React.FC = () => {
                           )}
                         </div>
 
-                        {/* Expanded content for non-locked mess cards */}
                         {!isLocked && expandedCanteen === canteen.id && (
                           <div className="bg-muted/50 p-5 border-t border-border space-y-4 animate-in slide-in-from-top-4">
                             {isPdfMenu ? (
-                              // PDF menu button for Polytechnic with menu preview
                               <div className="space-y-4">
-                                {/* Menu Preview Card - Now Orderable */}
                                 <MessThaliCard onShowToast={setToastMessage} />
 
-                                {/* PDF Button */}
                                 <div className="flex flex-col items-center gap-3 py-4">
                                   <p className="text-sm text-muted-foreground text-center font-sans">Detailed mess menu available as PDF</p>
                                   <button
@@ -400,7 +381,6 @@ const Explore: React.FC = () => {
                                 </div>
                               </div>
                             ) : (
-                              // Regular menu items for other mess
                               <>
                                 {Object.entries(groupByCategory(filteredCanteenItems)).map(([category, items]) => (
                                   <div key={category} className="space-y-3">
@@ -439,11 +419,9 @@ const Explore: React.FC = () => {
 };
 
 
-// Mess Thali Card Component (Orderable)
 const MessThaliCard: React.FC<{ onShowToast: (msg: string) => void }> = ({ onShowToast }) => {
   const { addToBag } = useBag();
 
-  // Create a mock MenuItem for Mess Thali
   const messThaliItem: MenuItem = {
     id: 'mess-thali-poly',
     canteenId: 'poly-hostel',
@@ -497,7 +475,6 @@ const MessThaliCard: React.FC<{ onShowToast: (msg: string) => void }> = ({ onSho
   );
 };
 
-// Search Result Card Component (Vertical, with canteen context)
 const SearchResultCard: React.FC<{
   item: MenuItem;
   availableCanteens: string[];
@@ -544,7 +521,6 @@ const SearchResultCard: React.FC<{
   );
 };
 
-// Regular Menu Card Component (Horizontal scroll in canteen sections)
 const MenuCard: React.FC<{ item: MenuItem; onShowToast: (msg: string) => void }> = ({ item, onShowToast }) => {
   const { addToBag } = useBag();
 

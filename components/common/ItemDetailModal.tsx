@@ -23,19 +23,16 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
 
     return (
         <>
-            {/* Backdrop */}
             <div
                 className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-in fade-in duration-200"
                 onClick={onClose}
             />
 
-            {/* Modal */}
             <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
                 <div
                     className="bg-card rounded-3xl shadow-2xl border border-border max-w-md w-full pointer-events-auto animate-in zoom-in-95 fade-in duration-200"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    {/* Header with close button */}
                     <div className="flex items-start justify-between p-6 pb-4">
                         <div className="flex items-center gap-3">
                             <div className="text-4xl">{item.emoji || '🍱'}</div>
@@ -61,7 +58,6 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                         </button>
                     </div>
 
-                    {/* Content */}
                     <div className="px-6 pb-4 space-y-3">
                         <div className="flex items-center gap-3 text-sm text-muted-foreground">
                             <span className="px-3 py-1 rounded-full bg-muted border border-border font-medium">
@@ -79,7 +75,6 @@ export const ItemDetailModal: React.FC<ItemDetailModalProps> = ({
                         </div>
                     </div>
 
-                    {/* Actions */}
                     <div className="p-6 pt-4 border-t border-border flex gap-3">
                         <button
                             onClick={onAddToBag}

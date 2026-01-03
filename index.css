@@ -4,28 +4,19 @@
 
 @layer base {
   :root {
-    /* Light mode - Clean white interface */
     --background: 0 0% 100%;
-    /* Pure white #ffffff */
     --foreground: 0 0% 9%;
-    /* Almost black for text #171717 */
 
-    /* Card theming - soft grey gradient with separation */
     --card: 0 0% 96%;
-    /* Very light grey for cards #f5f5f5 */
     --card-foreground: 0 0% 9%;
     --card-bg: linear-gradient(to bottom, hsl(220, 14%, 98%), hsl(220, 14%, 96%));
-    /* Soft grey gradient #f9fafb to #f3f4f6 */
     --card-border: rgba(15, 23, 42, 0.06);
-    /* Subtle neutral border */
     --card-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-    /* Soft shadow for elevation */
 
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 9%;
 
     --primary: 24.6 95% 53.1%;
-    /* Orange accent */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 96%;
@@ -33,88 +24,62 @@
 
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 40%;
-    /* Medium grey for secondary text #666666 */
 
-    /* Accent color - Persian blue for light mode */
     --accent: 217 91% 60%;
-    /* Persian blue #3b82f6 */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 83%;
-    /* Subtle light grey border #d4d4d4 */
     --input: 0 0% 90%;
     --ring: 217 91% 60%;
-    /* Match accent */
 
     --radius: 1rem;
 
-    /* Navigation theming for light mode */
     --nav-bg: hsl(0, 0%, 96%);
-    /* Light elevated surface #f5f5f7 */
     --nav-border: rgba(0, 0, 0, 0.08);
-    /* Subtle top border */
 
-    /* Icon color control for light mode */
     --icon-invert: 0;
     --icon-opacity: 0.7;
   }
 
   .dark {
-    /* Dark mode - Warm charcoal grey interface */
     --background: 0 0% 12%;
-    /* Warm dark grey #1f1f1f, NOT pure black */
     --foreground: 0 0% 98%;
-    /* White text #fafafa */
 
     --card: 0 0% 15%;
-    /* Slightly lighter grey for cards #262626 */
     --card-foreground: 0 0% 98%;
 
     --popover: 0 0% 15%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 24.6 95% 53.1%;
-    /* Orange accent */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 18%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 0 0% 18%;
-    /* Muted background #2e2e2e */
     --muted-foreground: 0 0% 60%;
-    /* Medium grey for secondary text #999999 */
 
     --accent: 61 100% 50%;
-    /* Exact #F5FF00 */
     --accent-foreground: 0 0% 0%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
 
     --border: 0 0% 20%;
-    /* Subtle dark grey border #333333, NOT white */
     --input: 0 0% 20%;
     --ring: 24.6 95% 53.1%;
 
-    /* Card theming - keep existing dark appearance */
     --card-bg: hsl(0, 0%, 15%);
-    /* Same as --card */
     --card-border: rgba(255, 255, 255, 0.05);
-    /* Subtle light border on dark */
     --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    /* Darker shadow */
 
-    /* Navigation theming for dark mode - keep existing gradient */
     --nav-bg: linear-gradient(to top, rgba(10, 10, 10, 0.9), rgba(38, 38, 38, 0.5));
-    /* Preserve dark gradient */
     --nav-border: rgba(255, 255, 255, 0.05);
-    /* Subtle border */
 
-    /* Icon color control for dark mode */
     --icon-invert: 1;
     --icon-opacity: 0.8;
   }
@@ -155,15 +120,11 @@
   animation: slide-in 4s linear forwards;
 }
 
-/* ============================================
-   SLOT MACHINE ANIMATIONS
-   ============================================ */
+/* Slot Machine Animations */
 
-/* Container */
 .slot-machine-container {
   width: 100%;
   max-width: 28rem;
-  /* sm:max-w-md */
   margin: 0 auto;
   padding: 0.5rem;
   display: flex;
@@ -178,7 +139,6 @@
   }
 }
 
-/* SVG */
 .slot-machine-svg {
   width: 100%;
   height: auto;
@@ -187,7 +147,6 @@
   transition: transform 0.3s ease;
 }
 
-/* Reel Spinning Animation - Realistic with blur */
 @keyframes spin-reel {
   0% {
     transform: translateY(0);
@@ -222,7 +181,6 @@
   animation: spin-reel 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
 }
 
-/* Staggered delays for each reel */
 .slot-reel-0 {
   animation-delay: 0s;
 }
@@ -235,7 +193,6 @@
   animation-delay: 0.1s;
 }
 
-/* Lever Pull Animation */
 @keyframes pull-lever {
   0% {
     transform: rotate(0deg);
@@ -263,7 +220,6 @@
   animation: pull-lever 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
-/* Hover effect on machine */
 .slot-machine-svg:hover {
   transform: scale(1.02);
 }
