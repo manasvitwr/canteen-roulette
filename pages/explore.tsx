@@ -429,9 +429,11 @@ const MessThaliCard: React.FC<{ onShowToast: (msg: string) => void }> = ({ onSho
     price: 70,
     category: 'Unlimited',
     isVeg: true,
+    type: 'meal',
+    temperature: 'hot',
     emoji: '🍛',
     tags: ['mess', 'unlimited'],
-    slug: 'mess-thali'
+    rarityWeight: 3
   };
 
   const handleAddToBag = () => {
@@ -445,31 +447,39 @@ const MessThaliCard: React.FC<{ onShowToast: (msg: string) => void }> = ({ onSho
   };
 
   return (
-    <div className="flex-none w-full flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm">
-      <div className="flex items-center gap-4">
-        <div className="text-3xl">🍛</div>
-        <div>
-          <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal font-sans">Mess Thali</h4>
-          <div className="flex items-center gap-2 mt-0.5">
-            <p className="font-bold text-xs text-accent">₹70 / Plate</p>
-            <span className="text-[10px] font-medium text-muted-foreground font-sans">Unlimited</span>
+    <div className="w-full p-4 bg-card rounded-xl border border-border shadow-sm">
+      {/* Main content wrapper - responsive flex */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Item info section */}
+        <div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+          <div className="text-3xl flex-shrink-0">🍛</div>
+          <div className="min-w-0 flex-1">
+            <h4 className="font-semibold text-foreground text-sm leading-tight tracking-normal font-sans">Mess Thali</h4>
+            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+              <p className="font-bold text-xs text-accent whitespace-nowrap">₹70 / Plate</p>
+              <span className="text-[10px] font-medium text-muted-foreground font-sans">Unlimited</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex items-center gap-2">
-        <VegIcon isVeg={true} size="w-3.5 h-3.5" />
-        <button
-          onClick={handleAddToBag}
-          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all active:scale-95"
-        >
-          Add to bag
-        </button>
-        <button
-          onClick={handleOrderNow}
-          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-95"
-        >
-          Order now
-        </button>
+
+        {/* Actions section - responsive layout */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2">
+          <VegIcon isVeg={true} size="w-3.5 h-3.5 hidden sm:block" />
+          <div className="flex gap-2">
+            <button
+              onClick={handleAddToBag}
+              className="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-all active:scale-95 whitespace-nowrap"
+            >
+              Add to bag
+            </button>
+            <button
+              onClick={handleOrderNow}
+              className="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all active:scale-95 whitespace-nowrap"
+            >
+              Order now
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
