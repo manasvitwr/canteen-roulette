@@ -171,3 +171,19 @@ export const setCanteenFilter = (canteenId: string) => {
 export const clearCanteenFilter = () => {
   localStorage.removeItem(STORAGE_KEYS.CANTEEN_FILTER);
 };
+
+export const getSelectedCanteenId = (): string | null => {
+  return localStorage.getItem(STORAGE_KEYS.CANTEEN_FILTER);
+};
+
+export const setSelectedCanteenId = (canteenId: string | null) => {
+  if (canteenId === null) {
+    localStorage.removeItem(STORAGE_KEYS.CANTEEN_FILTER);
+  } else {
+    localStorage.setItem(STORAGE_KEYS.CANTEEN_FILTER, canteenId);
+  }
+};
+
+export const clearSelectedCanteenId = () => {
+  localStorage.removeItem(STORAGE_KEYS.CANTEEN_FILTER);
+};
