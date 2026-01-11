@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { VegPreference, FoodType } from '../types';
-import { getVegPref, setVegPref, getPriceRange, setPriceRange, clearPriceRange, getFoodTypeFilter, setFoodTypeFilter } from '../lib/db.ts';
+import { getVegPref, setVegPref, getPriceRange, setPriceRange, clearPriceRange, getFoodTypeFilter, setFoodTypeFilter, getSelectedCanteenId, setSelectedCanteenId } from '../lib/db.ts';
 import { getMenuPriceRange } from '../lib/menu.ts';
 import { VegIcon } from '../components/common/VegIcon.tsx';
 
@@ -9,6 +9,7 @@ const Filters: React.FC = () => {
   const navigate = useNavigate();
   const [veg, setVeg] = useState<VegPreference>(getVegPref());
   const [foodType, setFoodType] = useState<FoodType | 'any'>((getFoodTypeFilter() as FoodType) || 'any');
+  const [selectedCanteenId, setSelectedCanteenIdState] = useState<string | null>(getSelectedCanteenId());
 
   // Price range state
   const [menuPriceRange, setMenuPriceRange] = useState<{ min: number; max: number } | null>(null);
@@ -42,6 +43,7 @@ const Filters: React.FC = () => {
   const handleSave = () => {
     setVegPref(veg);
     setFoodTypeFilter(foodType);
+    setSelectedCanteenId(selectedCanteenId);
 
     // Only save price range if it's different from the full range
     if (menuPriceRange && (priceMin !== menuPriceRange.min || priceMax !== menuPriceRange.max)) {
@@ -150,6 +152,49 @@ const Filters: React.FC = () => {
           ) : (
             <p className="text-sm text-muted-foreground">Unable to load price range</p>
           )}
+        </div>
+
+        {/* Canteen Selector - ON-CAMPUS ONLY */}
+        <div className="space-y-2">
+          <h3 className="text-sm font-medium text-foreground">Canteen</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <button
+              onClick={() => setSelectedCanteenIdState(null)}
+              className={`h-10 px-4 rounded-lg border font-medium text-sm capitalize transition-all ${selectedCanteenId === null ? 'bg-primary border-transparent text-primary-foreground shadow-md' : 'bg-secondary border-border text-muted-foreground'}`}
+            >
+              Any
+            </button>
+            <button
+              onClick={() => setSelectedCanteenIdState('engg')}
+              className={`h-10 px-4 rounded-lg border font-medium text-sm transition-all ${selectedCanteenId === 'engg' ? 'bg-primary border-transparent text-primary-foreground shadow-md' : 'bg-secondary border-border text-muted-foreground'}`}
+            >
+              Engineering
+            </button>
+            <button
+              onClick={() => setSelectedCanteenIdState('management')}
+              className={`h-10 px-4 rounded-lg border font-medium text-sm transition-all ${selectedCanteenId === 'management' ? 'bg-primary border-transparent text-primary-foreground shadow-md' : 'bg-secondary border-border text-muted-foreground'}`}
+            >
+              Management
+            </button>
+            <button
+              onClick={() => setSelectedCanteenIdState('aurobindo')}
+              className={`h-10 px-4 rounded-lg border font-medium text-sm transition-all ${selectedCanteenId === 'aurobindo' ? 'bg-primary border-transparent text-primary-foreground shadow-md' : 'bg-secondary border-border text-muted-foreground'}`}
+            >
+              Aurobindo
+            </button>
+            <button
+              onClick={() => setSelectedCanteenIdState('eklavya')}
+              className={`h-10 px-4 rounded-lg border font-medium text-sm transition-all ${selectedCanteenId === 'eklavya' ? 'bg-primary border-transparent text-primary-foreground shadow-md' : 'bg-secondary border-border text-muted-foreground'}`}
+            >
+              Eklavya Café
+            </button>
+            <button
+              onClick={() => setSelectedCanteenIdState('maggi')}
+              className={`h-10 px-4 rounded-lg border font-medium text-sm transition-all ${selectedCanteenId === 'maggi' ? 'bg-primary border-transparent text-primary-foreground shadow-md' : 'bg-secondary border-border text-muted-foreground'}`}
+            >
+              Maggi House
+            </button>
+          </div>
         </div>
 
         <FilterSection label="Meal type" value={foodType} onChange={setFoodType} options={['any', 'meal', 'Snack', 'Beverage']} />
