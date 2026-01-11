@@ -24,44 +24,55 @@ const ActiveOrderCard: React.FC<ActiveOrderCardProps> = ({ order, onPickUp }) =>
   const totalPrice = displayItems.reduce((sum, item) => sum + item.price, 0);
 
   return (
-    <div className="relative bg-card rounded-3xl p-7 shadow-xl border border-border overflow-hidden">
-      <div className="absolute top-0 right-0 p-5">
-        <span className="text-[9px] font-bold text-muted-foreground tracking-widest uppercase">Order #{order.id.slice(-4)}</span>
-      </div>
-
+    <div className="relative bg-card rounded-3xl p-5 sm:p-7 shadow-xl border border-border overflow-hidden">
       {isBagOrder ? (
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="text-3xl">🛍️</div>
-            <h3 className="text-lg font-semibold text-foreground">Bag Order ({displayItems.length} items)</h3>
+        <>
+          <div className="absolute top-0 right-0 p-5">
+            <span className="text-[9px] font-bold text-muted-foreground tracking-widest uppercase">Order #{order.id.slice(-4)}</span>
           </div>
-          <div className="space-y-2 max-h-40 overflow-y-auto">
-            {displayItems.map((item, idx) => (
-              <div key={idx} className="flex items-center gap-3 p-2 bg-secondary/50 rounded-lg">
-                <div className="text-2xl">{item.emoji}</div>
-                <div className="flex-1">
-                  <p className="text-sm font-semibold text-foreground">{item.name}</p>
-                  <div className="flex items-center gap-2">
-                    <VegIcon isVeg={item.isVeg} size="w-2.5 h-2.5" />
-                    <span className="text-xs text-accent">₹{item.price}</span>
+          <div className="mb-6">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="text-3xl">🛍️</div>
+              <h3 className="text-lg font-semibold text-foreground">Bag Order ({displayItems.length} items)</h3>
+            </div>
+            <div className="space-y-2 max-h-40 overflow-y-auto">
+              {displayItems.map((item, idx) => (
+                <div key={idx} className="flex items-center gap-3 p-2 bg-secondary/50 rounded-lg">
+                  <div className="text-2xl">{item.emoji}</div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-foreground">{item.name}</p>
+                    <div className="flex items-center gap-2">
+                      <VegIcon isVeg={item.isVeg} size="w-2.5 h-2.5" />
+                      <span className="text-xs text-accent">₹{item.price}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            <div className="mt-3 pt-3 border-t border-border flex justify-between items-center">
+              <span className="text-sm font-medium text-muted-foreground">Total</span>
+              <span className="text-lg font-bold text-accent">₹{totalPrice}</span>
+            </div>
           </div>
-          <div className="mt-3 pt-3 border-t border-border flex justify-between items-center">
-            <span className="text-sm font-medium text-muted-foreground">Total</span>
-            <span className="text-lg font-bold text-accent">₹{totalPrice}</span>
-          </div>
-        </div>
+        </>
       ) : (
-        <div className="flex items-center gap-5 mb-8">
-          <div className="text-5xl">{order.item!.emoji}</div>
-          <div>
-            <h3 className="text-xl font-semibold text-foreground tracking-normal">{order.item!.name}</h3>
-            <div className="flex items-center gap-2 mt-1">
-              <VegIcon isVeg={order.item!.isVeg} size="w-3 h-3" />
-              <p className="text-xs font-medium tracking-normal"><span className="text-accent">₹{order.item!.price}</span> • {order.item!.canteenName}</p>
+        <div className="mb-6 sm:mb-8">
+          {/* Mobile-friendly header with order number */}
+          <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-5 mb-3">
+            <div className="text-4xl sm:text-5xl flex-shrink-0">{order.item!.emoji}</div>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-lg sm:text-xl font-semibold text-foreground tracking-normal break-words">{order.item!.name}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    <VegIcon isVeg={order.item!.isVeg} size="w-3 h-3" />
+                    <p className="text-xs font-medium tracking-normal"><span className="text-accent">₹{order.item!.price}</span> • <span className="text-muted-foreground">{order.item!.canteenName}</span></p>
+                  </div>
+                </div>
+                <div className="flex-shrink-0">
+                  <span className="text-[9px] font-bold text-muted-foreground tracking-widest uppercase">Order #{order.id.slice(-4)}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
