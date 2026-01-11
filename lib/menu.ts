@@ -83,6 +83,7 @@ export interface MenuFilters {
   type?: FoodType | 'any';
   temperature?: Temperature | 'any';
   canteenId?: string;
+  selectedCanteenId?: string | null;
   mode?: 'on-campus' | 'off-campus';
 }
 
@@ -118,6 +119,24 @@ export async function getFilteredMenuItems(filters: MenuFilters): Promise<MenuIt
       items = items.filter(item => item.isVeg === filters.isVeg);
     }
 
+    // Step 2.5: Canteen filter (ON-CAMPUS ONLY)
+    // Apply selectedCanteenId filter and exclude mess items when a specific canteen is selected
+    const isOnCampus = !filters.mode || filters.mode === 'on-campus';
+    if (isOnCampus && filters.selectedCanteenId) {
+      // Fetch canteens to identify mess items
+      const canteens = await getCanteens();
+      const canteenMap = new Map(canteens.map(c => [c.id, c]));
+
+      // Filter to only items from the selected canteen
+      items = items.filter(item => item.canteenId === filters.selectedCanteenId);
+
+      // Exclude all mess items when a specific canteen is selected
+      items = items.filter(item => {
+        const canteen = canteenMap.get(item.canteenId);
+        return canteen?.type !== 'mess';
+      });
+    }
+
     // Step 3: Meal type filter
     if (filters.type && filters.type !== 'any') {
       const targetType = filters.type.toLowerCase();
@@ -126,7 +145,6 @@ export async function getFilteredMenuItems(filters: MenuFilters): Promise<MenuIt
 
     // Step 4: Price range filter (ON-CAMPUS ONLY)
     // Only apply if mode is on-campus AND price filter is explicitly set
-    const isOnCampus = !filters.mode || filters.mode === 'on-campus';
     const hasPriceFilter = filters.priceMin !== undefined || filters.priceMax !== undefined;
 
     if (isOnCampus && hasPriceFilter) {
