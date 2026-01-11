@@ -9,8 +9,9 @@ Built originally as a college hackathon project for Somaiya Vidyavihar’s cante
 - Lets you browse everything with search + filters, add items to a bag, and track “orders” with OTP‑style status updates.  
 - Campus Specfic: Aggregates menus from Engineering, Aurobindo, Management, Eklavya Café, Maggi House, and hostels into one place.
 
-**Disclaimer:**
-- This is a hackathon‑stage project. The order system is a **simulation only** (no real payments or integrations with actual vendors).
+Tech stack: **React + TypeScript + Vite + Firebase** (Auth, Firestore, Hosting) with Tailwind and an Inter‑based design system.  
+
+**Disclaimer:** This is a hackathon‑stage project. The order system is a **simulation only** (no real payments or integrations with actual vendors).
 
 ## Main features
 
