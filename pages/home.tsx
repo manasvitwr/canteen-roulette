@@ -4,7 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../lib/firebase.ts';
 import { Order } from '../types';
 import { MenuItem as FirestoreMenuItem, Canteen } from '../types/firestore.ts';
-import { getVegPref, getLocalOrders, getPriceRange, getFoodTypeFilter } from '../lib/db.ts';
+import { getVegPref, getLocalOrders, getPriceRange, getFoodTypeFilter, getSelectedCanteenId } from '../lib/db.ts';
 import { getFilteredMenuItems } from '../lib/menu.ts';
 import RouletteModal from '../components/roulette/RouletteModal.tsx';
 import { RouletteBanner } from '../components/roulette/RouletteBanner.tsx';
@@ -44,11 +44,16 @@ const Home: React.FC = () => {
         const vegPref = getVegPref();
         const priceRange = getPriceRange();
         const foodTypeFilter = getFoodTypeFilter();
+        const selectedCanteenId = getSelectedCanteenId();
 
         const filters: any = {
           isVeg: vegPref === 'veg' ? true : undefined,
           mode: 'on-campus'
         };
+
+        if (selectedCanteenId) {
+          filters.selectedCanteenId = selectedCanteenId;
+        }
 
         if (priceRange) {
           filters.priceMin = priceRange.min;
@@ -103,11 +108,16 @@ const Home: React.FC = () => {
       const vegPref = getVegPref();
       const priceRange = getPriceRange();
       const foodTypeFilter = getFoodTypeFilter();
+      const selectedCanteenId = getSelectedCanteenId();
 
       const filters: any = {
         isVeg: vegPref === 'veg' ? true : undefined,
         mode: mode
       };
+
+      if (mode === 'on-campus' && selectedCanteenId) {
+        filters.selectedCanteenId = selectedCanteenId;
+      }
 
       if (priceRange) {
         filters.priceMin = priceRange.min;
