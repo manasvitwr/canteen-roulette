@@ -22,7 +22,7 @@ const Login: React.FC = () => {
 
       if (!user.email?.endsWith('@somaiya.edu')) {
         await signOut(auth);
-        setError('Campus access only - use your @somaiya.edu Google account.');
+        setError('Looks like that\'s not a Somaiya account. Sign in with your @somaiya.edu Google account and try again.');
         setLoading(false);
         return;
       }
@@ -47,8 +47,19 @@ const Login: React.FC = () => {
       navigate('/');
     } catch (err: any) {
       console.error(err);
-      if (err.code !== 'auth/popup-closed-by-user') {
-        setError('Failed to sign in. Please try again.');
+      const code = err?.code || '';
+      if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+        // user dismissed — no error shown
+      } else if (code === 'auth/popup-blocked') {
+        setError('Pop-up was blocked by your browser. Allow pop-ups for this site and try again.');
+      } else if (code === 'auth/network-request-failed') {
+        setError('No internet connection. Check your network and try again.');
+      } else if (code === 'auth/unauthorized-domain') {
+        setError('This domain isn\'t authorised yet. Contact the app admin.');
+      } else if (code === 'auth/internal-error' || code === 'auth/insufficient-permission') {
+        setError('Google couldn\'t complete sign-in. Tap "Sign in with Google" again and make sure to tap Allow on the permissions screen.');
+      } else {
+        setError('Something went wrong signing in. Please try again.');
       }
       setLoading(false);
     }
@@ -74,43 +85,43 @@ const Login: React.FC = () => {
             <g transform="translate(0,10)">
               {/* LEFT CLUSTER */}
               {/* Column 1 */}
-              <rect x="54" y="72" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="54" y="72" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="58" y="76" width="46" height="46" rx="8" fill="#FF4A1F" />
 
-              <rect x="54" y="134" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="54" y="134" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="58" y="138" width="46" height="46" rx="8" fill="#FF4A1F" />
 
-              <rect x="54" y="196" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="54" y="196" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="58" y="200" width="46" height="46" rx="8" fill="#FF4A1F" />
 
               {/* Column 2 */}
-              <rect x="114" y="72" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="114" y="72" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="118" y="76" width="46" height="46" rx="8" fill="#FF4A1F" />
 
-              <rect x="114" y="196" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="114" y="196" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="118" y="200" width="46" height="46" rx="8" fill="#FF4A1F" />
 
               {/* RIGHT CLUSTER */}
               {/* Row 1 */}
-              <rect x="200" y="72" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="200" y="72" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="204" y="76" width="46" height="46" rx="8" fill="#FF4A1F" />
 
-              <rect x="260" y="72" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="260" y="72" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="264" y="76" width="46" height="46" rx="8" fill="#FF4A1F" />
 
               {/* Row 2 */}
-              <rect x="200" y="134" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="200" y="134" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="204" y="138" width="46" height="46" rx="8" fill="#FF4A1F" />
 
-              <rect x="260" y="134" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="260" y="134" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="264" y="138" width="46" height="46" rx="8" fill="#FF4A1F" />
 
               {/* Row 3 */}
-              <rect x="200" y="196" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="200" y="196" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="204" y="200" width="46" height="46" rx="8" fill="#FF4A1F" />
 
               {/* 6th R box */}
-              <rect x="292" y="196" width="54" height="54" rx="10" fill="#FF9A73" />
+              <rect x="292" y="196" width="54" height="54" rx="10" fill="#ff7742ff" />
               <rect x="296" y="200" width="46" height="46" rx="8" fill="#FF4A1F" />
 
               {/* CONNECTOR (ends at center of 6th box) */}
@@ -123,7 +134,7 @@ const Login: React.FC = () => {
                   L319 223
                 "
                 fill="none"
-                stroke="#FFFFFF"
+                stroke="#ff7742ff"
                 strokeWidth="5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -164,7 +175,7 @@ const Login: React.FC = () => {
               )}
             </button>
             {error && (
-              <p className="text-xs text-destructive font-semibold font-sans mt-3 animate-in fade-in slide-in-from-top-1">
+              <p className="text-xs text-white font-semibold font-sans mt-3 animate-in fade-in slide-in-from-top-1">
                 {error}
               </p>
             )}

@@ -26,64 +26,72 @@ const Home: React.FC = () => {
   const [selectedPopularItem, setSelectedPopularItem] = useState<FirestoreMenuItem | null>(null);
   const [canteens, setCanteens] = useState<Canteen[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [popularLoading, setPopularLoading] = useState(true);
+  const [popularError, setPopularError] = useState<string | null>(null);
+
+  const loadPopular = async () => {
+    setPopularLoading(true);
+    setPopularError(null);
+    try {
+      const canteensRef = collection(db, 'canteens');
+      const canteensSnapshot = await getDocs(canteensRef);
+      const canteensData = canteensSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Canteen));
+      setCanteens(canteensData);
+
+      const canteenMap = new Map(canteensData.map(c => [c.id, c.name]));
+
+      const vegPref = getVegPref();
+      const priceRange = getPriceRange();
+      const foodTypeFilter = getFoodTypeFilter();
+      const selectedCanteenId = getSelectedCanteenId();
+
+      const filters: any = {
+        isVeg: vegPref === 'veg' ? true : undefined,
+        mode: 'on-campus'
+      };
+
+      if (selectedCanteenId) {
+        filters.selectedCanteenId = selectedCanteenId;
+      }
+
+      if (priceRange) {
+        filters.priceMin = priceRange.min;
+        filters.priceMax = priceRange.max;
+      }
+
+      if (foodTypeFilter && foodTypeFilter !== 'any') {
+        filters.type = foodTypeFilter;
+      }
+
+      let validItems = await getFilteredMenuItems(filters);
+
+      if (validItems.length === 0 && priceRange) {
+        const filtersNoPrice = { ...filters };
+        delete filtersNoPrice.priceMin;
+        delete filtersNoPrice.priceMax;
+        validItems = await getFilteredMenuItems(filtersNoPrice);
+      }
+
+      const shuffled = [...validItems].sort(() => Math.random() - 0.5);
+      const selected = shuffled.slice(0, 4).map(item => ({
+        ...item,
+        canteenName: canteenMap.get(item.canteenId) || 'Campus Canteen'
+      }));
+
+      setPopularItems(selected);
+    } catch (err) {
+      console.error("Failed to load popular items:", err);
+      setPopularError("Couldn't load popular items. Tap to retry.");
+    } finally {
+      setPopularLoading(false);
+    }
+  };
 
   useEffect(() => {
     setPastOrders(getLocalOrders().slice(0, 3));
-    async function loadPopular() {
-      try {
-        const canteensRef = collection(db, 'canteens');
-        const canteensSnapshot = await getDocs(canteensRef);
-        const canteensData = canteensSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        } as Canteen));
-        setCanteens(canteensData);
-
-        const canteenMap = new Map(canteensData.map(c => [c.id, c.name]));
-
-        const vegPref = getVegPref();
-        const priceRange = getPriceRange();
-        const foodTypeFilter = getFoodTypeFilter();
-        const selectedCanteenId = getSelectedCanteenId();
-
-        const filters: any = {
-          isVeg: vegPref === 'veg' ? true : undefined,
-          mode: 'on-campus'
-        };
-
-        if (selectedCanteenId) {
-          filters.selectedCanteenId = selectedCanteenId;
-        }
-
-        if (priceRange) {
-          filters.priceMin = priceRange.min;
-          filters.priceMax = priceRange.max;
-        }
-
-        if (foodTypeFilter && foodTypeFilter !== 'any') {
-          filters.type = foodTypeFilter;
-        }
-
-        let validItems = await getFilteredMenuItems(filters);
-
-        if (validItems.length === 0 && priceRange) {
-          const filtersNoPrice = { ...filters };
-          delete filtersNoPrice.priceMin;
-          delete filtersNoPrice.priceMax;
-          validItems = await getFilteredMenuItems(filtersNoPrice);
-        }
-
-        const shuffled = [...validItems].sort(() => Math.random() - 0.5);
-        const selected = shuffled.slice(0, 4).map(item => ({
-          ...item,
-          canteenName: canteenMap.get(item.canteenId) || 'Campus Canteen'
-        }));
-
-        setPopularItems(selected);
-      } catch (err) {
-        console.error("Failed to load popular items:", err);
-      }
-    }
     loadPopular();
   }, []);
 
@@ -221,7 +229,7 @@ const Home: React.FC = () => {
       {/* Popular Items - Grid */}
       <section className="space-y-6">
         <h2 className="text-xs font-bold tracking-[0.15em] text-muted-foreground uppercase ml-2">Popular choices</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {popularItems.map((item) => (
             <div
               key={item.id}
@@ -240,10 +248,18 @@ const Home: React.FC = () => {
               <div className="text-3xl transition-transform group-hover:scale-110">{item.emoji || '🍱'}</div>
             </div>
           ))}
-          {popularItems.length === 0 && (
+          {popularLoading && popularItems.length === 0 && (
             <div className="col-span-full py-12 flex justify-center">
               <div className="animate-spin h-6 w-6 border-b-2 border-primary rounded-full"></div>
             </div>
+          )}
+          {popularError && !popularLoading && (
+            <button
+              onClick={loadPopular}
+              className="col-span-full py-10 text-center text-sm font-medium text-muted-foreground bg-muted rounded-2xl border border-dashed border-border hover:border-primary/50 transition-all"
+            >
+              {popularError}
+            </button>
           )}
         </div>
       </section>
