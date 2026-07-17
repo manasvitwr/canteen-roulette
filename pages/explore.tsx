@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../lib/firebase.ts';
 import { Canteen, MenuItem } from '../types/firestore.ts';
+import { getCachedCanteens, setCachedCanteens, getCachedMenuItems, setCachedMenuItems } from '../lib/menuCache.ts';
 import { getVegPref } from '../lib/db.ts';
 import { VegIcon } from '../components/common/VegIcon.tsx';
 import { useBag } from '../lib/BagContext.tsx';
@@ -23,12 +24,31 @@ const Explore: React.FC = () => {
 
   useEffect(() => {
     async function loadData() {
+      // ── Step 1: serve from cache instantly ────────────────────────────────
+      const cachedCanteens = getCachedCanteens();
+      const cachedItems = getCachedMenuItems();
+
+      if (cachedCanteens && cachedItems) {
+        // Paint UI immediately with cached data — no spinner
+        setCanteens(cachedCanteens);
+        setAllMenuItems(cachedItems);
+        setLoading(false);
+        // Then silently refresh in background
+        refreshFromFirestore(cachedCanteens, cachedItems);
+        return;
+      }
+
+      // ── Step 2: cold start — nothing cached, show spinner + fetch ─────────
+      setLoading(true);
+      setError(null);
+      await refreshFromFirestore(null, null);
+    }
+
+    async function refreshFromFirestore(
+      existingCanteens: Canteen[] | null,
+      existingItems: MenuItem[] | null
+    ) {
       try {
-        setLoading(true);
-        setError(null);
-
-        console.log('[Explore] Starting to load data from Firestore...');
-
         const canteensRef = collection(db, 'canteens');
         const canteensQuery = query(canteensRef, where('isActive', '==', true));
         const canteensSnapshot = await getDocs(canteensQuery);
@@ -44,17 +64,30 @@ const Explore: React.FC = () => {
           ...doc.data()
         } as MenuItem));
 
-        console.log(`✅ Loaded ${canteensData.length} canteens and ${menuData.length} menu items from Firestore`);
+        console.log(`✅ Firestore: ${canteensData.length} canteens, ${menuData.length} items`);
 
-        setCanteens(canteensData);
-        setAllMenuItems(menuData);
+        // Write to cache
+        setCachedCanteens(canteensData);
+        setCachedMenuItems(menuData);
+
+        // Only update state if data actually changed vs what's already rendered
+        if (JSON.stringify(canteensData) !== JSON.stringify(existingCanteens)) {
+          setCanteens(canteensData);
+        }
+        if (JSON.stringify(menuData) !== JSON.stringify(existingItems)) {
+          setAllMenuItems(menuData);
+        }
       } catch (err) {
-        console.error("[Explore] Failed to load data from Firestore:", err);
-        setError("Failed to load menu data. Please check your connection and refresh.");
+        console.error('[Explore] Firestore fetch failed:', err);
+        // Only show error if we have nothing to show at all
+        if (!existingCanteens) {
+          setError('Couldn\'t load menu data. Check your connection and try again.');
+        }
       } finally {
         setLoading(false);
       }
     }
+
     loadData();
   }, []);
 

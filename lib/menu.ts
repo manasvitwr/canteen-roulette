@@ -8,6 +8,7 @@ import {
 import { db } from './firebase.ts';
 import { Canteen, MenuItem, FoodType, Temperature } from '../types/firestore.ts';
 import { MOCK_CANTEENS, MOCK_MENU } from './db.ts';
+import { getCachedMenuItems, setCachedMenuItems, getCachedCanteens, setCachedCanteens } from './menuCache.ts';
 
 export function getEmojiForItem(name: string, category: string = ''): string {
   const n = name.toLowerCase();
@@ -40,18 +41,28 @@ export function getEmojiForItem(name: string, category: string = ''): string {
 
 export async function getCanteens(): Promise<Canteen[]> {
   try {
+    // Cache-first
+    const cached = getCachedCanteens();
+    if (cached) return cached;
+
     const canteensRef = collection(db, 'canteens');
     const q = query(canteensRef, where('isActive', '==', true));
     const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) return MOCK_CANTEENS.map(c => ({
-      ...c,
-      locationTag: c.building,
-      slug: c.id
-    })) as unknown as Canteen[];
+    if (querySnapshot.empty) {
+      const fallback = MOCK_CANTEENS.map(c => ({
+        ...c,
+        locationTag: c.building,
+        slug: c.id
+      })) as unknown as Canteen[];
+      setCachedCanteens(fallback);
+      return fallback;
+    }
 
-    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Canteen));
+    const canteens = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Canteen));
+    setCachedCanteens(canteens);
+    return canteens;
   } catch (error) {
-    console.warn("Firestore error, falling back to mock canteens");
+    console.warn('Firestore error, falling back to mock canteens');
     return MOCK_CANTEENS.map(c => ({
       ...c,
       locationTag: c.building,
@@ -94,43 +105,41 @@ export interface MenuFilters {
 
 export async function getFilteredMenuItems(filters: MenuFilters): Promise<MenuItem[]> {
   try {
-    const menuRef = collection(db, 'menu_items');
-    let q = query(menuRef);
+    // ── Cache-first: get full item list from localStorage ─────────────────
+    let allItems = getCachedMenuItems();
 
-    // Firestore-level filters (only for indexable fields)
+    if (!allItems) {
+      // Cold fetch — pull everything from Firestore and cache it
+      const menuRef = collection(db, 'menu_items');
+      const baseQuery = filters.isVeg !== undefined
+        ? query(menuRef, where('isVeg', '==', filters.isVeg))
+        : query(menuRef);
+
+      const querySnapshot = await getDocs(baseQuery);
+      allItems = querySnapshot.empty
+        ? MOCK_MENU.filter(i => filters.isVeg === undefined || i.isVeg === filters.isVeg) as unknown as MenuItem[]
+        : querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as MenuItem));
+
+      setCachedMenuItems(allItems);
+    }
+
+    let items = [...allItems];
+
+    // Veg filter
     if (filters.isVeg !== undefined) {
-      q = query(q, where('isVeg', '==', filters.isVeg));
+      items = items.filter(item => item.isVeg === filters.isVeg);
     }
-    if (filters.canteenId) {
-      q = query(q, where('canteenId', '==', filters.canteenId));
-    }
-
-    const querySnapshot = await getDocs(q);
-    let items = querySnapshot.empty
-      ? MOCK_MENU.filter(i => filters.isVeg === undefined || i.isVeg === filters.isVeg) as unknown as MenuItem[]
-      : querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as MenuItem));
 
     // Step 1: Apply exclusions FIRST
     const { isItemExcluded } = await import('./exclusions.ts');
     items = items.filter(item => !isItemExcluded(item.name, (item as any).isAddOn));
 
-    // Step 2: Veg filter (already applied in Firestore, but keep for safety)
-    if (filters.isVeg !== undefined) {
-      items = items.filter(item => item.isVeg === filters.isVeg);
-    }
-
     // Step 2.5: Canteen filter (ON-CAMPUS ONLY)
-    // Apply selectedCanteenId filter and exclude mess items when a specific canteen is selected
     const isOnCampus = !filters.mode || filters.mode === 'on-campus';
     if (isOnCampus && filters.selectedCanteenId) {
-      // Fetch canteens to identify mess items
       const canteens = await getCanteens();
       const canteenMap = new Map(canteens.map(c => [c.id, c]));
-
-      // Filter to only items from the selected canteen
       items = items.filter(item => item.canteenId === filters.selectedCanteenId);
-
-      // Exclude all mess items when a specific canteen is selected
       items = items.filter(item => {
         const canteen = canteenMap.get(item.canteenId);
         return canteen?.type !== 'mess';
@@ -144,16 +153,14 @@ export async function getFilteredMenuItems(filters: MenuFilters): Promise<MenuIt
     }
 
     // Step 4: Price range filter (ON-CAMPUS ONLY)
-    // Only apply if mode is on-campus AND price filter is explicitly set
     const hasPriceFilter = filters.priceMin !== undefined || filters.priceMax !== undefined;
-
     if (isOnCampus && hasPriceFilter) {
       const min = filters.priceMin!;
       const max = filters.priceMax!;
       items = items.filter(item => item.price >= min && item.price <= max);
     }
 
-    // Step 5: Temperature filter (if needed)
+    // Step 5: Temperature filter
     if (filters.temperature && filters.temperature !== 'any') {
       items = items.filter(item => item.temperature === filters.temperature);
     }

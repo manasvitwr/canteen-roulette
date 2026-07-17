@@ -6,6 +6,7 @@ import { Order } from '../types';
 import { MenuItem as FirestoreMenuItem, Canteen } from '../types/firestore.ts';
 import { getVegPref, getLocalOrders, getPriceRange, getFoodTypeFilter, getSelectedCanteenId } from '../lib/db.ts';
 import { getFilteredMenuItems } from '../lib/menu.ts';
+import { getCachedCanteens, setCachedCanteens } from '../lib/menuCache.ts';
 import RouletteModal from '../components/roulette/RouletteModal.tsx';
 import { RouletteBanner } from '../components/roulette/RouletteBanner.tsx';
 import { useAuth } from '../App.tsx';
@@ -33,12 +34,17 @@ const Home: React.FC = () => {
     setPopularLoading(true);
     setPopularError(null);
     try {
-      const canteensRef = collection(db, 'canteens');
-      const canteensSnapshot = await getDocs(canteensRef);
-      const canteensData = canteensSnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      } as Canteen));
+      // Use cached canteens if available — avoids cold Firestore round-trip
+      let canteensData = getCachedCanteens();
+      if (!canteensData) {
+        const canteensRef = collection(db, 'canteens');
+        const canteensSnapshot = await getDocs(canteensRef);
+        canteensData = canteensSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        } as Canteen));
+        setCachedCanteens(canteensData);
+      }
       setCanteens(canteensData);
 
       const canteenMap = new Map(canteensData.map(c => [c.id, c.name]));
@@ -83,7 +89,7 @@ const Home: React.FC = () => {
 
       setPopularItems(selected);
     } catch (err) {
-      console.error("Failed to load popular items:", err);
+      console.error('Failed to load popular items:', err);
       setPopularError("Couldn't load popular items. Tap to retry.");
     } finally {
       setPopularLoading(false);
@@ -94,6 +100,8 @@ const Home: React.FC = () => {
     setPastOrders(getLocalOrders().slice(0, 3));
     loadPopular();
   }, []);
+
+
 
   useEffect(() => {
     if (!isModalOpen) {

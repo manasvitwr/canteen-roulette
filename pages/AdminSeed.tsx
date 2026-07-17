@@ -4,6 +4,7 @@ import { doc, setDoc, collection, writeBatch, getDocs } from 'firebase/firestore
 import { db } from '../lib/firebase.ts';
 import { MenuItem, FoodType, Temperature } from '../types/firestore.ts';
 import { getEmojiForItem } from '../lib/menu.ts';
+import { clearMenuCache } from '../lib/menuCache.ts';
 
 const RAW_MENU_DATA = `
 ## Cafeteria Canteen (Olive Greens by Jimmy Boy)
@@ -857,6 +858,7 @@ const AdminSeed: React.FC = () => {
       });
 
       await seedBatch.commit();
+      clearMenuCache(); // bust cache so next load pulls fresh seeded data
       setStatus(`Success! Seeded ${canteens.length} canteens and ${menuItems.length} menu items. Deleted ${deletedCount} old items.`);
     } catch (error: any) {
       console.error(error);
