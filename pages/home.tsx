@@ -29,11 +29,6 @@ const Home: React.FC = () => {
   const [popularLoading, setPopularLoading] = useState(true);
   const [popularError, setPopularError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setPastOrders(getLocalOrders().slice(0, 3));
-    loadPopular();
-  }, []);
-
   const loadPopular = async () => {
     setPopularLoading(true);
     setPopularError(null);
@@ -94,6 +89,11 @@ const Home: React.FC = () => {
       setPopularLoading(false);
     }
   };
+
+  useEffect(() => {
+    setPastOrders(getLocalOrders().slice(0, 3));
+    loadPopular();
+  }, []);
 
   useEffect(() => {
     if (!isModalOpen) {
