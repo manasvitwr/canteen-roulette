@@ -5,7 +5,7 @@ import { db } from '../lib/firebase.ts';
 import { Order } from '../types';
 import { MenuItem as FirestoreMenuItem, Canteen } from '../types/firestore.ts';
 import { getVegPref, getLocalOrders, getPriceRange, getFoodTypeFilter, getSelectedCanteenId } from '../lib/db.ts';
-
+import { getFilteredMenuItems } from '../lib/menu.ts';
 import { getCachedCanteens, setCachedCanteens, getCachedMenuItems, setCachedMenuItems } from '../lib/menuCache.ts';
 import RouletteModal from '../components/roulette/RouletteModal.tsx';
 import { RouletteBanner } from '../components/roulette/RouletteBanner.tsx';
