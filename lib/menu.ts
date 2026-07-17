@@ -176,25 +176,32 @@ export async function getFilteredMenuItems(filters: MenuFilters): Promise<MenuIt
  * Computes the actual min and max prices from all menu items in Firestore.
  * Returns { min, max } or null if no items exist.
  */
+const PRICE_CACHE_KEY = 'cr_cache_price_range';
+const PRICE_TTL_MS = 60 * 60 * 1000;
+
 export async function getMenuPriceRange(): Promise<{ min: number; max: number } | null> {
   try {
+    // Cache-first
+    const raw = localStorage.getItem(PRICE_CACHE_KEY);
+    if (raw) {
+      const entry = JSON.parse(raw);
+      if (Date.now() - entry.cachedAt < PRICE_TTL_MS) return entry.data;
+    }
+
     const menuRef = collection(db, 'menu_items');
     const querySnapshot = await getDocs(menuRef);
 
     if (querySnapshot.empty) {
-      // Fallback to mock data
       const prices = MOCK_MENU.map(item => item.price);
-      return {
-        min: Math.min(...prices),
-        max: Math.max(...prices)
-      };
+      const range = { min: Math.min(...prices), max: Math.max(...prices) };
+      localStorage.setItem(PRICE_CACHE_KEY, JSON.stringify({ data: range, cachedAt: Date.now() }));
+      return range;
     }
 
     const prices = querySnapshot.docs.map(doc => (doc.data() as MenuItem).price);
-    return {
-      min: Math.min(...prices),
-      max: Math.max(...prices)
-    };
+    const range = { min: Math.min(...prices), max: Math.max(...prices) };
+    localStorage.setItem(PRICE_CACHE_KEY, JSON.stringify({ data: range, cachedAt: Date.now() }));
+    return range;
   } catch (error) {
     console.error('Failed to get menu price range:', error);
     return null;

@@ -22,7 +22,7 @@ const Login: React.FC = () => {
 
       if (!user.email?.endsWith('@somaiya.edu')) {
         await signOut(auth);
-        setError('Looks like that\'s not a Somaiya account. Sign in with your @somaiya.edu Google account and try again.');
+        setError('Switch to your Somaiya Google account, or continue as a guest.');
         setLoading(false);
         return;
       }

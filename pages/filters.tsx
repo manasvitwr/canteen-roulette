@@ -18,19 +18,16 @@ const Filters: React.FC = () => {
   const [isLoadingPrices, setIsLoadingPrices] = useState(true);
 
   useEffect(() => {
-    // Load menu price range
     const loadPriceRange = async () => {
       const range = await getMenuPriceRange();
       if (range) {
         setMenuPriceRange(range);
 
-        // Check if user has saved preferences
         const savedRange = getPriceRange();
         if (savedRange) {
           setPriceMin(savedRange.min);
           setPriceMax(savedRange.max);
         } else {
-          // Default to full range
           setPriceMin(range.min);
           setPriceMax(range.max);
         }

@@ -5,8 +5,8 @@ import { db } from '../lib/firebase.ts';
 import { Order } from '../types';
 import { MenuItem as FirestoreMenuItem, Canteen } from '../types/firestore.ts';
 import { getVegPref, getLocalOrders, getPriceRange, getFoodTypeFilter, getSelectedCanteenId } from '../lib/db.ts';
-import { getFilteredMenuItems } from '../lib/menu.ts';
-import { getCachedCanteens, setCachedCanteens } from '../lib/menuCache.ts';
+
+import { getCachedCanteens, setCachedCanteens, getCachedMenuItems, setCachedMenuItems } from '../lib/menuCache.ts';
 import RouletteModal from '../components/roulette/RouletteModal.tsx';
 import { RouletteBanner } from '../components/roulette/RouletteBanner.tsx';
 import { useAuth } from '../App.tsx';
@@ -30,67 +30,95 @@ const Home: React.FC = () => {
   const [popularLoading, setPopularLoading] = useState(true);
   const [popularError, setPopularError] = useState<string | null>(null);
 
+  const pickPopular = (canteensData: Canteen[], items: FirestoreMenuItem[]) => {
+    const vegPref = getVegPref();
+    const priceRange = getPriceRange();
+    const foodTypeFilter = getFoodTypeFilter();
+    const selectedCanteenId = getSelectedCanteenId();
+
+    let filtered = items.filter(i => {
+      if (vegPref === 'veg' && !i.isVeg) return false;
+      if (selectedCanteenId && i.canteenId !== selectedCanteenId) return false;
+      if (priceRange && (i.price < priceRange.min || i.price > priceRange.max)) return false;
+      if (foodTypeFilter && foodTypeFilter !== 'any' && i.type.toLowerCase() !== foodTypeFilter.toLowerCase()) return false;
+      return true;
+    });
+
+    if (filtered.length === 0 && priceRange) {
+      filtered = items.filter(i => {
+        if (vegPref === 'veg' && !i.isVeg) return false;
+        if (selectedCanteenId && i.canteenId !== selectedCanteenId) return false;
+        if (foodTypeFilter && foodTypeFilter !== 'any' && i.type.toLowerCase() !== foodTypeFilter.toLowerCase()) return false;
+        return true;
+      });
+    }
+
+    const canteenMap = new Map(canteensData.map(c => [c.id, c.name]));
+    const shuffled = [...filtered].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 4).map(item => ({
+      ...item,
+      canteenName: canteenMap.get(item.canteenId) || 'Campus Canteen'
+    }));
+  };
+
   const loadPopular = async () => {
-    setPopularLoading(true);
     setPopularError(null);
     try {
-      // Use cached canteens if available — avoids cold Firestore round-trip
-      let canteensData = getCachedCanteens();
-      if (!canteensData) {
-        const canteensRef = collection(db, 'canteens');
-        const canteensSnapshot = await getDocs(canteensRef);
-        canteensData = canteensSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        } as Canteen));
-        setCachedCanteens(canteensData);
-      }
-      setCanteens(canteensData);
+      // Cache-first: serve instantly, refresh in background
+      const cachedCanteens = getCachedCanteens();
+      const cachedMenu = getCachedMenuItems();
 
-      const canteenMap = new Map(canteensData.map(c => [c.id, c.name]));
-
-      const vegPref = getVegPref();
-      const priceRange = getPriceRange();
-      const foodTypeFilter = getFoodTypeFilter();
-      const selectedCanteenId = getSelectedCanteenId();
-
-      const filters: any = {
-        isVeg: vegPref === 'veg' ? true : undefined,
-        mode: 'on-campus'
-      };
-
-      if (selectedCanteenId) {
-        filters.selectedCanteenId = selectedCanteenId;
+      if (cachedCanteens && cachedMenu) {
+        setCanteens(cachedCanteens);
+        setPopularItems(pickPopular(cachedCanteens, cachedMenu));
+        setPopularLoading(false);
+        // Background refresh
+        refreshPopular(cachedCanteens, cachedMenu);
+        return;
       }
 
-      if (priceRange) {
-        filters.priceMin = priceRange.min;
-        filters.priceMax = priceRange.max;
-      }
-
-      if (foodTypeFilter && foodTypeFilter !== 'any') {
-        filters.type = foodTypeFilter;
-      }
-
-      let validItems = await getFilteredMenuItems(filters);
-
-      if (validItems.length === 0 && priceRange) {
-        const filtersNoPrice = { ...filters };
-        delete filtersNoPrice.priceMin;
-        delete filtersNoPrice.priceMax;
-        validItems = await getFilteredMenuItems(filtersNoPrice);
-      }
-
-      const shuffled = [...validItems].sort(() => Math.random() - 0.5);
-      const selected = shuffled.slice(0, 4).map(item => ({
-        ...item,
-        canteenName: canteenMap.get(item.canteenId) || 'Campus Canteen'
-      }));
-
-      setPopularItems(selected);
+      // Cold start — fetch from Firestore
+      setPopularLoading(true);
+      await refreshPopular(null, null);
     } catch (err) {
       console.error('Failed to load popular items:', err);
       setPopularError("Couldn't load popular items. Tap to retry.");
+      setPopularLoading(false);
+    }
+  };
+
+  const refreshPopular = async (
+    existingCanteens: Canteen[] | null,
+    existingItems: FirestoreMenuItem[] | null
+  ) => {
+    try {
+      const canteensRef = collection(db, 'canteens');
+      const canteensSnapshot = await getDocs(canteensRef);
+      const canteensData = canteensSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as Canteen));
+      setCachedCanteens(canteensData);
+      if (existingCanteens) setCanteens(canteensData);
+
+      const menuRef = collection(db, 'menu_items');
+      const menuSnapshot = await getDocs(menuRef);
+      const menuData = menuSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      } as FirestoreMenuItem));
+      setCachedMenuItems(menuData);
+
+      const items = menuData;
+      if (JSON.stringify(canteensData) !== JSON.stringify(existingCanteens) || JSON.stringify(items) !== JSON.stringify(existingItems)) {
+        setCanteens(canteensData);
+        setPopularItems(pickPopular(canteensData, items));
+      }
+    } catch (err) {
+      console.error('[Home] Background refresh failed:', err);
+      if (!existingCanteens) {
+        setPopularError("Couldn't load popular items. Tap to retry.");
+      }
     } finally {
       setPopularLoading(false);
     }
