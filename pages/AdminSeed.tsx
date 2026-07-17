@@ -725,7 +725,7 @@ const AdminSeed: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
 
-  if (process.env.NODE_ENV !== 'development') {
+  if (!import.meta.env.DEV) {
     return <div className="p-8 text-center text-neutral-500 uppercase font-black text-xs">Restricted</div>;
   }
 
